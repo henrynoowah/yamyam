@@ -30,6 +30,7 @@ public class PetUserController {
 	public String login(PetUserDTO.Login login, HttpSession session) throws Exception {
 		PetUser user = null;
 		user = dao.findPetUserById(login.getId());
+		System.out.println(login.getId());
 		
 		if(user != null) {
 			if(!(user.getPw().equals(login.getPw()))) {
@@ -39,10 +40,10 @@ public class PetUserController {
 			throw new Exception("아이디가 존재하지 않습니다");
 		}
 		
-		PetUserDTO.Session loggedIn = new PetUserDTO.Session();
+		PetUserDTO.Session loggedIn = new PetUserDTO.Session();;
 		loggedIn.setId(user.getId());
 		loggedIn.setAdmin(user.getAdmin());
-		session.setAttribute("user", user);
+		session.setAttribute("user", loggedIn);
 		
 		return "로그인 성공 시 redirect 할 링크 작성 (foodList.html)";
 	}
@@ -58,7 +59,7 @@ public class PetUserController {
 		PetUser user = null;
 		user = dao.findPetUserById(register.getId());
 		
-		if(user.getId().equals(register.getId())) {
+		if(user != null) {
 			throw new Exception("이미 존재하는 아이디입니다");
 		} else {
 			dao.save(register.toEntity());

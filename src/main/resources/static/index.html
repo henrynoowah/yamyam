@@ -13,19 +13,46 @@
 
 <style>
     body {
-        margin: auto;
+        margin: 0px;
+        overflow: hidden;
     }
+
+    .container {
+        background-color: #FFE2EE;
+        position: absolute;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        width: 100%;
+    }
+
     .landingBtn {
+        background-color: #FF8CBD;
         text-decoration: none;
-        padding: 10px;
-        border: 1px solid black;
-        border-radius: 5px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
         margin-top: 20px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .landingBtn:hover {
+        background-color: #ffadd0;
     }
 
     #landingPage {
+        width: 450px;
+        position: relative;
+    }
+
+    .landing {
+        margin: auto;
+        padding: 30px;
         display: flex;
-        width: 20%;
+        width: 350px;
         height: 250px;
         text-align: center;
         border-radius: 10px;
@@ -34,49 +61,125 @@
         justify-content: space-around;
     }
 
-    .landingPop {
+    .popUpContainer {
         position: absolute;
-        align-content: center;
-        width: 50%;
-        background-color: aqua;
-        height: 250px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .landingPopUp {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        padding: 30px;
+        background-color: #FF8CBD;
+        border-radius: 10px;
+    }
+
+    .landingPopUp.login {
+        transform: translateY(-250px);
+    }
+
+    .landingPopUp.register {
+        transform: translateY(-400px);
+    }
+
+    .popUpForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .popUpForm label {
+        margin: 10px;
+    }
+
+    .popUpContent button, .popUpForm input[type=submit], .popUpForm select {
+        background-color:white;
+        border: none;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .popUpContent button:hover, .popUpForm input[type=submit]:hover {
+        background-color: #ffd0e3;
+    }
+
+    .popUpForm input[type=text], .popUpForm input[type=password] {
+        text-align: center;
+        padding: 5px;
+        border-radius: 10px;
+        border: none;
     }
 
 </style>
 
 <body>
-
-    <h3>빙봉과 하운</h3>
     
-    <hr>
-
-    <div id="landingPage">
-
-        <button @click="loginBtn" class="landingBtn">로그인 하기 🐕</button>
-        <button @click="registerBtn" class="landingBtn">회원가입 🐈</button>
-
-        <login v-if="login" class="landingPopUp"></login>
-        <register v-if="register" class="landingPopUp"></register>
+    <div class="container">
         
+        <h3>Yam! Yam! 꿀떡!</h3>   
+        <div id="landingPage">
+    
+            <div class="landing">
+                <button @click="loginBtn" class="landingBtn">로그인 하기 🐕</button>
+                <button @click="registerBtn" class="landingBtn">회원가입 🐈</button>
+            </div>
+            
+            <div class="popUpContainer">
+                <login v-if="login" class="landingPopUp login" ></login>
+                <register v-if="register" class="landingPopUp register"></register>
+            </div>
+    
+        </div>
+
     </div>
 
-
-
     <template id="login">
-        <div class="landingPop">
+        <div class="popUpContent" >
+            <form action="/login" method="post" class="popUpForm">
+                <label for="name">아이디를 입력하세요</label>
+                <input type="text" v-model:value="id">
+                <label for="name">비밀번호를 입력하세요</label>
+                <input type="password" v-model:value="pw">
+                <br>
+                <input type="submit" value="로그인">
+            </form>
             <button @click="loginBtn">닫기</button>
-            <hr>
-            로그인 폼 폼 작성할 예정!!
-            <form action=""></form>
         </div>
     </template>
 
     <template id="register">
-        <div class="landingPop">
+        <div class="popUpContent">
+            <form action="/register" class="popUpForm">
+                <label for="id">아이디를 입력하세요</label>
+                <input type="text" v-model:value="id">
+                <label for="pw">비밀번호를 입력하세요</label>
+                <input type="password" v-model:value="pw">
+                <label for="name">이름을 입력하세요</label>
+                <input type="text" v-model.lazy:value="name">
+                <label for="type">{{name}}는 어떤 동물인가요?</label>
+                <select name="type" v-model:value="type">
+                    <option value="0">멍멍이</option>
+                    <option value="1">야옹이</option>
+                  </select>
+                <label for="breed">{{name}}의 종을 입력해주세요</label>
+                <input type="text" v-model:value="breed">
+                <label for="weight">무게를 입력해주세요(kg)</label>
+                <input type="text" v-model:value="weight">
+                <br>
+                <input type="submit" value="회원가입">
+            </form>
             <button @click="registerBtn">닫기</button>
-            <hr>
-            회원가입 작성할 예정!!
-            <form action=""></form>
         </div>
     </template>
 
@@ -88,13 +191,16 @@
             template: "#login",
             data() {
                 return {
-                    id: "아이디",
-                    pw: "비밀번호"
+                    id: "",
+                    pw: ""
                 }
             },
             methods: {
                 loginBtn(){
                     this.$root.$emit("test")
+                },
+                show() {
+
                 }
             },
         });
@@ -103,8 +209,9 @@
             template: "#register",
             data() {
                 return {
-                    id: "아이디",
-                    pw: "비밀번호",
+                    id: "",
+                    pw: "",
+                    name: "",
                     type: "",
                     breed: "",
                     weight: ""
@@ -113,6 +220,24 @@
             methods: {
                 registerBtn(){
                     this.$root.$emit("test")
+                },
+                register: function(){
+                    console.log("hello");
+                    axios({
+                        method: "post",
+                        url : "/login",
+                        params: {
+                            id: this.id,
+                            pw: this.pw,
+                            name: this.name,
+                            admin: 0,
+                            type: this.type,
+                            breed: this.breed,
+                            weight: this.weight
+                        }
+                    }).then(res => {
+                        console.log(res.data)
+                    })
                 }
             },
         });

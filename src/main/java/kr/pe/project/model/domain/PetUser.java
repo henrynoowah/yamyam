@@ -30,6 +30,9 @@ public class PetUser {
 	@Column(name = "id")
 	private String id;
 	
+	@Column(name = "name", nullable = false)
+	private String name;
+	
 	@Column(name = "pw", nullable = false)
 	private String pw;
 	
