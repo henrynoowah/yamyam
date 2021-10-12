@@ -1,6 +1,9 @@
 package kr.pe.project.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,6 +12,10 @@ import kr.pe.project.dao.FoodDogRepository;
 import kr.pe.project.dao.FoodRepository;
 import kr.pe.project.model.domain.Food;
 import kr.pe.project.model.domain.FoodCat;
+import kr.pe.project.model.domain.FoodDog;
+import kr.pe.project.model.domain.dto.FoodCatDTO;
+import kr.pe.project.model.domain.dto.FoodDTO;
+import kr.pe.project.model.domain.dto.FoodDogDTO;
 
 @RestController
 public class FoodController {
@@ -36,8 +43,158 @@ public class FoodController {
 		return foodListAll;
 	}
 	
+	//음식명으로 조회
+	@GetMapping("searchFoodName")
+	public Food searchFoodName(String foodName) {
+		Food food = dao.findFoodByName(foodName); //'사과'로 검색한다면 사과뿐만 아니라, '사과'가 들어간 음식 모두 조회하기? ex 사과주
+		
+		if (food != null) {
+			System.out.println(food);			
+			return food;
+		} else {
+			System.out.println("null 출력");
+			return null;
+		}
+	}
+	
+	//카테고리로 조회 
+	@GetMapping("searchFoodCategory")
+	public List<Food> searchFoodCategory(String category) {
+		List<Food> foods = dao.findFoodByCategory(category);
+		
+		if (foods != null) {
+			System.out.println(foods);
+			return foods;
+		} else {
+			System.out.println("null 출력");
+			return null;
+		}
+	}
+	
+	//동물로 조회
+	@GetMapping("searchAnimal")
+	public List searchAnimal(String animalName) throws Exception {
+		if (animalName.equals("강아지")) {
+			List<FoodDog> dogList = dogDao.findFoodDogByEatable(1);
+			return dogList;
+		} else if (animalName.equals("고양이")) {
+			List<FoodCat> catList = catDao.findFoodCatByEatable(1);
+			return catList;
+		} else {
+			throw new Exception("해당 동물에 관한 정보가 없습니다");
+		}
+	}
+	
+	/* administrator */
+	
+	//add food
+	@GetMapping("addFood")
+	public String addFood(FoodDTO.Add food) throws Exception { 
+		Food findFood = dao.findFoodByName(food.getName());
+		
+		if (findFood != null) {
+			throw new Exception("이미 존재하는 음식입니다.");
+		} else {
+			dao.save(food.toEntity());
+		}
+		
+		return "추가 완료";
+	}
+	
+	//add foodCat
+	@GetMapping("addInfoCat")
+	public String addInfoCat(String name, FoodCatDTO.Add info) {
+		Food food = dao.findFoodByName(name);
+		info.setId(food.getId());
+		
+		catDao.save(info.toEntity());
+		
+		food.setCat(info.toEntity());
+		dao.save(food);
+		
+		return "추가 완료";
+	}
+	
+	//add foodDog
+	@GetMapping("addInfoDog")
+	public String addInfoDog(String name, FoodDogDTO.Add info) {
+		Food food = dao.findFoodByName(name);
+		info.setId(food.getId());
+		
+		dogDao.save(info.toEntity());
+		
+		return "추가 완료";
+	}
+	
+	//edit foodCat
+	@GetMapping("editFoodCat")
+	//빈칸일 경우 프론트에서 경고창 뜨게 가능?
+	public String editFoodCat(FoodCatDTO.Update info) throws Exception { 
+		if (info.getAmount() != null
+			&& info.getEatable() != null
+			&& info.getInfo() != null) {
+			System.out.println(catDao.save(info.toEntity()));
+		} else {
+			throw new Exception("작성되지 않은 항목이 있습니다.");
+		}
+		
+		return "test";
+	}
+	
+	//edit foodDog
+	@GetMapping("editFoodDog")
+	//빈칸일 경우 프론트에서 경고창 뜨게 가능?
+	public String editFoodDog(FoodDogDTO.Update info) throws Exception { 
+		if (info.getAmount() != null && 
+			info.getEatable() != null && 
+			info.getInfo() != null) {
+			System.out.println(dogDao.save(info.toEntity()));
+		} else {
+			throw new Exception("작성되지 않은 항목이 있습니다.");
+		}
+		
+		return "test";
+	}
+	
+	//edit food
+	@GetMapping("editFood")
+	public String editFood(FoodDTO.Update info) throws Exception {
+		if (info.getName() != null && info.getCategory() != null) {
+			info.setId(info.getId());
+			
+			
+			Food food = dao.findById(id).get();
+			food.setCategory(info.getCategory());
+			food.setName(info.getName());
+			
+			System.out.println("test1");
+//			if (catDao.findById(id).get() != null) {
+//				System.out.println("test2");
+//				info.setCat(catDao.findById(id).get());
+//			}
+//			if (dogDao.findById(id).get() != null) {
+//				System.out.println("test3");
+//				info.setDog(dogDao.findById(id).get());
+//			}
+		
+			System.out.println("test4");
+			System.out.println(dao.save(info.toEntity()));
+		} else {
+			throw new Exception("작성되지 않은 항목이 있습니다.");
+		}
+		dao.save(info.toEntity()); //foodCat, foodDog 프론트에서 넘어오게 할 것 ? food idx 있어서 자동 매핑되나 ?
+		System.out.println(info.toEntity());
+		return "test";
+	}
+	
+	@ExceptionHandler
+	public void foodException(Exception e) {
+		System.out.println(e.getMessage()); 
+	}
+	
+	
 	// 직접 검색해서 찾는 조회
-	// 1. Search Engine
+	// 1. Search Engine - 어떤 걸 검색할건지 (동물로? 음식 명으로? 음식 카테고리로?)
 	// 2. 카테고리별 조회 
 	
 	// 은진A 담당
