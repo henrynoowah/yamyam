@@ -13,19 +13,20 @@ import lombok.Setter;
 @Setter
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+
 public class FoodInfo {
 	
 	@Id
 	@Column(name = "food_idx")
 	private long id;
 	
-	@Column(name = "eatable")
+	@Column(name = "eatable", nullable = false)
 	private Integer eatable;
 	
-	@Column(name = "amount")
+	@Column(name = "amount", nullable = false)
 	private String amount;
 	
-	@Column(name = "info")
+	@Column(name = "info", nullable = false)
 	private String info;
 	
 }

@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
+@Builder
 
 @Entity(name = "food_list")
 public class Food {
@@ -37,7 +39,7 @@ public class Food {
 	
 	@Column(name = "food_category", nullable = false)	
 	private String category;
-	
+	 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
 	private List<Post> postList;
 	
