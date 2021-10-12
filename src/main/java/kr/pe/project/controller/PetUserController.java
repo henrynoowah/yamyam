@@ -1,5 +1,6 @@
 package kr.pe.project.controller;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,8 @@ public class PetUserController {
 	@Autowired
 	private PetUserRepository dao;
 	
-	
 	@PostMapping("login")
-	public String login(PetUserDTO.Login login, HttpSession session) throws Exception {
+	public PetUser login(PetUserDTO.Login login, HttpSession session) throws Exception {
 		PetUser user = null;
 		user = dao.findPetUserById(login.getId());
 		System.out.println(login.getId());
@@ -35,23 +35,23 @@ public class PetUserController {
 		if(user != null) {
 			if(!(user.getPw().equals(login.getPw()))) {
 				throw new Exception("비밀번호가 틀렸습니다");
+			} else {
+				PetUserDTO.Session loggedIn = new PetUserDTO.Session();;
+				loggedIn.setId(user.getId());
+				loggedIn.setAdmin(user.getAdmin());
+				session.setAttribute("user", loggedIn);
 			}
 		} else {
 			throw new Exception("아이디가 존재하지 않습니다");
 		}
 		
-		PetUserDTO.Session loggedIn = new PetUserDTO.Session();;
-		loggedIn.setId(user.getId());
-		loggedIn.setAdmin(user.getAdmin());
-		session.setAttribute("user", loggedIn);
-		
-		return "로그인 성공 시 redirect 할 링크 작성 (foodList.html)";
+		return user;
 	}
 	
 	@GetMapping("logout")
 	public String logout(SessionStatus status) throws Exception {
 		status.setComplete();
-		return "회원가입 성공 시 자동 로그인 후 redirect 할 링크 작성 (foodList.html)";
+		return "index.html";
 	}
 	
 	@PostMapping("register")
@@ -63,13 +63,14 @@ public class PetUserController {
 			throw new Exception("이미 존재하는 아이디입니다");
 		} else {
 			dao.save(register.toEntity());
+			
 		}
-		return "회원가입 성공 시 자동 로그인 후 redirect 할 링크 작성 (foodList.html)";
+		return "회원가입 성공!";
 	}
 	
-	@ExceptionHandler
-	public void PetUserException(Exception e) {
-		System.out.println(e.getMessage());
+//	@ExceptionHandler
+	public String PetUserException(Exception e) {
+		return e.getMessage();
 	}
 
 }

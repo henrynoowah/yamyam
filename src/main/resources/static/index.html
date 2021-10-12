@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>얌얌 꿀떡!</title>
 </head>
 
 <style>
@@ -146,7 +147,7 @@
 
     <template id="login">
         <div class="popUpContent" >
-            <form action="/login" method="post" class="popUpForm">
+            <form @submit.prevent="login" method="post" class="popUpForm">
                 <label for="name">아이디를 입력하세요</label>
                 <input type="text" v-model:value="id">
                 <label for="name">비밀번호를 입력하세요</label>
@@ -160,7 +161,7 @@
 
     <template id="register">
         <div class="popUpContent">
-            <form action="/register" class="popUpForm">
+            <form @submit.prevent="register" class="popUpForm">
                 <label for="id">아이디를 입력하세요</label>
                 <input type="text" v-model:value="id">
                 <label for="pw">비밀번호를 입력하세요</label>
@@ -168,7 +169,7 @@
                 <label for="name">이름을 입력하세요</label>
                 <input type="text" v-model.lazy:value="name">
                 <label for="type">{{name}}는 어떤 동물인가요?</label>
-                <select name="type" v-model:value="type">
+                <select name="type" v-model:value="animalType">
                     <option value="0">멍멍이</option>
                     <option value="1">야옹이</option>
                   </select>
@@ -199,8 +200,21 @@
                 loginBtn(){
                     this.$root.$emit("test")
                 },
-                show() {
-
+                login() {
+                    axios({
+                        method: "post",
+                        url: "/login",
+                        params: {
+                            id: this.id,
+                            pw: this.pw
+                        }
+                    }).then(res => {
+                        console.log(res.data);
+                        sessionStorage.setItem("user", JSON.stringify(res.data));
+                        window.location.href = "foodList.html"
+                    }).catch(err => {
+                        alert(err.response.data.message);
+                    })
                 }
             },
         });
@@ -212,7 +226,7 @@
                     id: "",
                     pw: "",
                     name: "",
-                    type: "",
+                    animalType: "",
                     breed: "",
                     weight: ""
                 }
@@ -221,22 +235,25 @@
                 registerBtn(){
                     this.$root.$emit("test")
                 },
-                register: function(){
+                register(){
                     console.log("hello");
                     axios({
                         method: "post",
-                        url : "/login",
+                        url : "/register",
                         params: {
                             id: this.id,
                             pw: this.pw,
                             name: this.name,
                             admin: 0,
-                            type: this.type,
+                            animalType: this.animalType,
                             breed: this.breed,
                             weight: this.weight
                         }
                     }).then(res => {
-                        console.log(res.data)
+                        alert(res.data);
+                        this.registerBtn();
+                    }).catch(err => {
+                    	alert(err.response.data.message);
                     })
                 }
             },
