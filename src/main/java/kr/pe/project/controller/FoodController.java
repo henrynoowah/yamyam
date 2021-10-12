@@ -163,9 +163,9 @@ public class FoodController {
 			info.setId(info.getId());
 			
 			
-			Food food = dao.findById(id).get();
-			food.setCategory(info.getCategory());
-			food.setName(info.getName());
+//			Food food = dao.findById(id).get();
+//			food.setCategory(info.getCategory());
+//			food.setName(info.getName());
 			
 			System.out.println("test1");
 //			if (catDao.findById(id).get() != null) {

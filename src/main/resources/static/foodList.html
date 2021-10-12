@@ -69,13 +69,21 @@
             margin: auto;
             border-radius: 10px;
             aspect-ratio: 1/1;
-            align-content: center;
+
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             
             cursor: pointer;
             transform-style: preserve-3d;
             transform-style: preserve-3d;
             transition: ease-in 0.3s;
             transform: perspective(600px) rotateY(0deg);     
+        }
+
+        .card .cardName {
+            pointer-events: none;
         }
         
         .flip {
@@ -86,11 +94,15 @@
             background-color: blanchedalmond;
             /* transform: perspective(600px) rotateY(180deg); */
         }
+
+        /* 돌아가있기 떄문에 다시 돌려야 함 */
+        .backCard {
+            transform: rotateY(180deg);
+        }
     
     </style>
 
 </head>
-
 
 <body>
     
@@ -106,19 +118,19 @@
         </div>
 
         <div class="foodCards">
-            <div class="card" v-for="food, i in foodList" @click="flipCard($event.path[0], food.id)">
+            <div class="card" :style="{}" v-for="(boolean, i) in flip" @click="flipCard($event.path[0], i)">
                 <!-- 앞에 부분 -->
-                <div v-if="flip[food[i]]">
-                    <!-- {{flip[food.id]}} -->
-                    {{food.name}}
+                <div v-if="boolean" class="cardName">
+                    <h3>{{foodList[i].name}}</h3>
                 </div>
+
                 <!-- 돌렸을 때 -->
-                <div>
-                    {{food.dog}} : {{food.cat}}
+                <div class="backCard" v-if="!boolean">
+                    <a href="/index.html">강아지</a>
+                    <a href="">고양이</a>
                 </div>
             </div>
         </div>
-
     </div>
 
     <template id="headerNav">
@@ -151,6 +163,7 @@
                         method: "get",
                         url: "/logout"
                     }).then(res => {
+                        console.log(res.data);
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
@@ -166,21 +179,26 @@
                 foodList: [],
                 flip: []
             },
-            mounted() {
+            created() {
                 axios.get("/foodListAll").then(res => {
                     console.log(res.data)
                     this.foodList = res.data;
-                    this.foodList.forEach((v, i) => {
-                        this.flip[i] = true;
+                    console.log(this.foodList);
+                    this.foodList.forEach(v => {
+                        this.flip.push(true);
                     })
                 })
             },
             methods: {
-                flipCard(foodCard, id) {
-                    foodCard.classList.toggle('flip')
-                    this.flip[id] = !this.flip[id];
-                    console.log(this.flip[id]);
-                }
+                flipCard(cardTag, i) {
+                    console.log(cardTag);
+                    cardTag.classList.toggle('flip');
+                    // Vue의 인덱스값 사용 제한 
+                    // 실시간 업데이트에 대한 제한으로 아래 함수를 활용
+                    // Vue.set(바꾸고 싶은 데이터, 데이터 인덱스 위치, 새로 작성하는 값)
+                    this.$set(this.flip, i, !this.flip[i]);
+                    // console.log(this.foodList[i]);
+                },
             }
         });
 
