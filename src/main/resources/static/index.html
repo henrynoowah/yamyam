@@ -140,7 +140,7 @@
                 <login v-if="login" class="landingPopUp login" ></login>
                 <register v-if="register" class="landingPopUp register"></register>
             </div>
-    ❗
+            
         </div>
 
     </div>
@@ -170,8 +170,9 @@
                 <input type="text" v-model.lazy:value="name">
                 <label for="type">{{name}}는 어떤 동물인가요?</label>
                 <select name="type" v-model:value="animalType">
-                    <option value="0">멍멍이</option>
-                    <option value="1">야옹이</option>
+                    <option value="animal.id" v-for="animal in animals">{{animal.name}}</option>
+                    <!-- <option value="0">멍멍이</option>
+                    <option value="1">야옹이</option> -->
                   </select>
                 <label for="breed">{{name}}의 종을 입력해주세요</label>
                 <input type="text" v-model:value="breed">
@@ -228,8 +229,14 @@
                     name: "",
                     animalType: "",
                     breed: "",
-                    weight: ""
+                    weight: "",
+                    animals: [],
                 }
+            },
+            created() {
+                axios.get("/getAnimalType").then(res => {
+                    this.animals = res.data;
+                })
             },
             methods: {
                 registerBtn(){
@@ -263,7 +270,7 @@
             el: "#landingPage",
             data: {
                 login: false,
-                register: false
+                register: false,
             },
             methods: {
                 loginBtn() {

@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.pe.project.dao.AnimalInfoRepository;
 import kr.pe.project.dao.FoodRepository;
+import kr.pe.project.model.domain.AnimalInfo;
 import kr.pe.project.model.domain.Food;
+import kr.pe.project.model.domain.dto.AnimalInfoDTO;
 
 
 @RestController
@@ -19,6 +22,9 @@ public class FoodController {
 	
 	@Autowired
 	private FoodRepository dao;
+	
+	@Autowired
+	private AnimalInfoRepository animalInfoDao;
 	
 	// 일반회원 + 관리자용 메소드
 	// 전체 조회
@@ -56,6 +62,13 @@ public class FoodController {
 			System.out.println("null 출력");
 			return null;
 		}
+	}
+	
+	@GetMapping("getAnimalInfo")
+	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
+		
+		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
+		return null;
 	}
 	
 	//동물로 조회
