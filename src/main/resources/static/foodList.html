@@ -69,7 +69,11 @@
             margin: auto;
             border-radius: 10px;
             aspect-ratio: 1/1;
-            align-content: center;
+
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             
             cursor: pointer;
             transform-style: preserve-3d;
@@ -77,6 +81,10 @@
             transition: ease-in 0.3s;
             transform: perspective(600px) rotateY(0deg);     
         }
+
+        /* .card .cardName {
+            pointer-events: none;
+        } */
         
         .flip {
             transform: perspective(600px) rotateY(180deg);
@@ -86,11 +94,15 @@
             background-color: blanchedalmond;
             /* transform: perspective(600px) rotateY(180deg); */
         }
+
+        /* 돌아가있기 떄문에 다시 돌려야 함 */
+        .cardBack {
+            transform: rotateY(180deg);
+        }
     
     </style>
 
 </head>
-
 
 <body>
     
@@ -106,19 +118,19 @@
         </div>
 
         <div class="foodCards">
-            <div class="card" v-for="food, i in foodList" @click="flipCard($event.path[0], food.id)">
+            <div class="card" :class="checked(boolean)" v-for="(boolean, i) in flip" @click="flipCard($event.path[0], i)">
                 <!-- 앞에 부분 -->
-                <div v-if="flip[food[i]]">
-                    <!-- {{flip[food.id]}} -->
-                    {{food.name}}
+                <div :class="checked(boolean)">
+                    <h3 >{{foodList[i].name}}</h3>
                 </div>
+
                 <!-- 돌렸을 때 -->
-                <div>
-                    {{food.dog}} : {{food.cat}}
+                <div class="cardBack">
+                    <button @click="infoPage(foodList[i].dog)">멍멍이</button>
+                    <button @click="infoPage(foodList[i].cat)">야옹이</button>
                 </div>
             </div>
         </div>
-
     </div>
 
     <template id="headerNav">
@@ -128,7 +140,7 @@
                 <li><a href="myPage">My Page</a></li>
                 <li><a href="myFavorites">Favorites</a></li>
                 <li v-if="user.admin == 1"><a href="addFood">Add Food</a></li>
-                <li><button @click="logout">Log Out</a></li>
+                <li><button onclick="alert(1)">Log Out</a></li>
             </ul>
         </div>
     </template>
@@ -151,6 +163,7 @@
                         method: "get",
                         url: "/logout"
                     }).then(res => {
+                        console.log(res.data);
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
@@ -164,23 +177,57 @@
             el: "#foodListContainer",
             data: {
                 foodList: [],
-                flip: []
+                flip: [],
             },
-            mounted() {
+            created() {
                 axios.get("/foodListAll").then(res => {
                     console.log(res.data)
                     this.foodList = res.data;
-                    this.foodList.forEach((v, i) => {
-                        this.flip[i] = true;
+                    console.log(this.foodList);
+                    this.foodList.forEach(v => {
+                        this.flip.push(true);
                     })
                 })
             },
             methods: {
-                flipCard(foodCard, id) {
-                    foodCard.classList.toggle('flip')
-                    this.flip[id] = !this.flip[id];
-                    console.log(this.flip[id]);
+                flipCard(cardTag, i) {
+                    console.log(cardTag);
+                    // cardTag.classList.toggle('flip');
+
+                    // Vue의 인덱스값 사용 제한 
+                    // 실시간 업데이트에 대한 제한으로 아래 함수를 활용
+                    // Vue.set(바꾸고 싶은 데이터, 데이터 인덱스 위치, 새로 작성하는 값)
+                    this.$set(this.flip, i, !this.flip[i]);
+
+                    return !this.flip[i] ? {flip: true} : {flip: false};
+                    
+                    // console.log(this.foodList[i]);
+                },
+                infoPage(animal) {
+                    console.log(animal)
+                    Vue.component("infoPage", {
+                        template: "#infoPage",
+                        data() {
+                            return {
+                                eatable: null,
+                                amount: null,
+                                info: null,          
+                            }
+                        },
+                        created() {
+
+                            this.eatable = animal.eatable;
+                            this.amount = animal.amount;
+                            this.info = animal.info;
+                            console.log(this.info)
+
+                        },
+                    })
+                },
+                checked(boolean) {
+                    return boolean? { flip: false } : { flip: true }
                 }
+
             }
         });
 

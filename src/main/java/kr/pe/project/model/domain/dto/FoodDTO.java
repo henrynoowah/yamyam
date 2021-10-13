@@ -23,8 +23,9 @@ public class FoodDTO {
 		public Food toEntity() {
 			return Food.builder().name(name)
 								 .category(category)
-								 .dog(dog)
-								 .cat(cat).build();
+//								 .dog(dog)
+//								 .cat(cat)
+								 .build();
 		}
 	}
 	

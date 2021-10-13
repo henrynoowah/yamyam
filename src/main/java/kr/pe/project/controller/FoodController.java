@@ -109,7 +109,7 @@ public class FoodController {
 		
 		catDao.save(info.toEntity());
 		
-		food.setCat(info.toEntity());
+//		food.setCat(info.toEntity());
 		dao.save(food);
 		
 		return "추가 완료";
@@ -158,6 +158,7 @@ public class FoodController {
 	//edit food
 	@GetMapping("editFood")
 	public String editFood(FoodDTO.Update info) throws Exception {
+    
 		Food food = dao.findById(info.getId()).get();
 		food.setName(info.getName());
 		food.setCategory(info.getCategory());
