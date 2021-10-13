@@ -1,9 +1,9 @@
 package kr.pe.project.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -103,8 +103,8 @@ public class FoodController {
 	
 	//add foodCat
 	@GetMapping("addInfoCat")
-	public String addInfoCat(String name, FoodCatDTO.Add info) {
-		Food food = dao.findFoodByName(name);
+	public String addInfoCat(String foodName, FoodCatDTO.Add info) {
+		Food food = dao.findFoodByName(foodName);
 		info.setId(food.getId());
 		
 		catDao.save(info.toEntity());
@@ -143,7 +143,6 @@ public class FoodController {
 	
 	//edit foodDog
 	@GetMapping("editFoodDog")
-	//빈칸일 경우 프론트에서 경고창 뜨게 가능?
 	public String editFoodDog(FoodDogDTO.Update info) throws Exception { 
 		if (info.getAmount() != null && 
 			info.getEatable() != null && 
@@ -159,39 +158,27 @@ public class FoodController {
 	//edit food
 	@GetMapping("editFood")
 	public String editFood(FoodDTO.Update info) throws Exception {
-		if (info.getName() != null && info.getCategory() != null) {
-			info.setId(info.getId());
-			
-			
-			Food food = dao.findById(id).get();
-			food.setCategory(info.getCategory());
-			food.setName(info.getName());
-			
-			System.out.println("test1");
-//			if (catDao.findById(id).get() != null) {
-//				System.out.println("test2");
-//				info.setCat(catDao.findById(id).get());
-//			}
-//			if (dogDao.findById(id).get() != null) {
-//				System.out.println("test3");
-//				info.setDog(dogDao.findById(id).get());
-//			}
+		Food food = dao.findById(info.getId()).get();
+		food.setName(info.getName());
+		food.setCategory(info.getCategory());
 		
-			System.out.println("test4");
-			System.out.println(dao.save(info.toEntity()));
-		} else {
-			throw new Exception("작성되지 않은 항목이 있습니다.");
+		//동물이 늘어나면 set... 코드가 한 줄씩 계속 늘어나겠군,,,, 비효율적인 것 같다
+		try {
+			food.setCat(catDao.findById(info.getId()).get());
+		} catch (NoSuchElementException e) {
+			System.out.println("cat 정보 없음");
 		}
-		dao.save(info.toEntity()); //foodCat, foodDog 프론트에서 넘어오게 할 것 ? food idx 있어서 자동 매핑되나 ?
-		System.out.println(info.toEntity());
+		
+		try {
+			food.setDog(dogDao.findById(info.getId()).get());
+		} catch (NoSuchElementException e) {
+			System.out.println("dog 정보 없음");
+		}
+	
+		dao.save(food);
+		
 		return "test";
 	}
-	
-	@ExceptionHandler
-	public void foodException(Exception e) {
-		System.out.println(e.getMessage()); 
-	}
-	
 	
 	// 직접 검색해서 찾는 조회
 	// 1. Search Engine - 어떤 걸 검색할건지 (동물로? 음식 명으로? 음식 카테고리로?)
