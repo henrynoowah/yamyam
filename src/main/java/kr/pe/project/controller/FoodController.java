@@ -164,17 +164,17 @@ public class FoodController {
 		food.setCategory(info.getCategory());
 		
 		//동물이 늘어나면 set... 코드가 한 줄씩 계속 늘어나겠군,,,, 비효율적인 것 같다
-		try {
-			food.setCat(catDao.findById(info.getId()).get());
-		} catch (NoSuchElementException e) {
-			System.out.println("cat 정보 없음");
-		}
-		
-		try {
-			food.setDog(dogDao.findById(info.getId()).get());
-		} catch (NoSuchElementException e) {
-			System.out.println("dog 정보 없음");
-		}
+//		try {
+//			food.setCat(catDao.findById(info.getId()).get());
+//		} catch (NoSuchElementException e) {
+//			System.out.println("cat 정보 없음");
+//		}
+//		
+//		try {
+//			food.setDog(dogDao.findById(info.getId()).get());
+//		} catch (NoSuchElementException e) {
+//			System.out.println("dog 정보 없음");
+//		}
 	
 		dao.save(food);
 		

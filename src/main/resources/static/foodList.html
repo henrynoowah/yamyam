@@ -79,7 +79,7 @@
             transform-style: preserve-3d;
             transform-style: preserve-3d;
             transition: ease-in 0.3s;
-            transform: perspective(600px) rotateY(0deg);     
+            transform: perspective(600px) rotateY(0deg);
         }
 
         /* .card .cardName {
@@ -94,10 +94,22 @@
             background-color: blanchedalmond;
             /* transform: perspective(600px) rotateY(180deg); */
         }
+        
+        .cardFront {
+            position: absolute;
+            width: 100%;
+            margin: auto;
+            transform: rotateY(0deg);
+        }
 
         /* 돌아가있기 떄문에 다시 돌려야 함 */
         .cardBack {
             transform: rotateY(180deg);
+            display: none;
+        }
+
+        .cardBackShow {
+            display: block;
         }
     
     </style>
@@ -118,16 +130,20 @@
         </div>
 
         <div class="foodCards">
-            <div class="card" :class="checked(boolean)" v-for="(boolean, i) in flip" @click="flipCard($event.path[0], i)">
+            <div class="card" :class="checked(boolean)" v-for="(boolean, i) in flip" @click.self="flipCard(i)">
                 <!-- 앞에 부분 -->
-                <div :class="checked(boolean)">
+                <div class="cardFront">
                     <h3 >{{foodList[i].name}}</h3>
                 </div>
 
                 <!-- 돌렸을 때 -->
-                <div class="cardBack">
-                    <button @click="infoPage(foodList[i].dog)">멍멍이</button>
-                    <button @click="infoPage(foodList[i].cat)">야옹이</button>
+                <div class="cardBack" :class="checked(boolean)">
+                    <div @click="infoPage">
+                        <p>멍멍이</p>
+                    </div>
+                    <div @click="infoPage">
+                        <p>야옹이</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,7 +156,7 @@
                 <li><a href="myPage">My Page</a></li>
                 <li><a href="myFavorites">Favorites</a></li>
                 <li v-if="user.admin == 1"><a href="addFood">Add Food</a></li>
-                <li><button onclick="alert(1)">Log Out</a></li>
+                <li><button @click="logout">Log Out</a></li>
             </ul>
         </div>
     </template>
@@ -190,8 +206,7 @@
                 })
             },
             methods: {
-                flipCard(cardTag, i) {
-                    console.log(cardTag);
+                flipCard(i) {
                     // cardTag.classList.toggle('flip');
 
                     // Vue의 인덱스값 사용 제한 
@@ -199,35 +214,17 @@
                     // Vue.set(바꾸고 싶은 데이터, 데이터 인덱스 위치, 새로 작성하는 값)
                     this.$set(this.flip, i, !this.flip[i]);
 
-                    return !this.flip[i] ? {flip: true} : {flip: false};
+                    // return !this.flip[i] ? {flip: true} : {flip: false};
                     
                     // console.log(this.foodList[i]);
                 },
-                infoPage(animal) {
-                    console.log(animal)
-                    Vue.component("infoPage", {
-                        template: "#infoPage",
-                        data() {
-                            return {
-                                eatable: null,
-                                amount: null,
-                                info: null,          
-                            }
-                        },
-                        created() {
-
-                            this.eatable = animal.eatable;
-                            this.amount = animal.amount;
-                            this.info = animal.info;
-                            console.log(this.info)
-
-                        },
-                    })
+                infoPage() {
+                    alert("test");
                 },
-                checked(boolean) {
-                    return boolean? { flip: false } : { flip: true }
-                }
 
+                checked(boolean) {
+                    return boolean? { flip: false, cardBackShow: false } : { flip: true ,cardBackShow: true }
+                }
             }
         });
 
