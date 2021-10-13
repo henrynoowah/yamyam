@@ -14,7 +14,7 @@
     <style>
 
         body {
-            background-color: #FFE2EE;;
+            background-color: #FFE2EE;
             margin: 0px;
         }
 
@@ -69,17 +69,13 @@
             margin: auto;
             border-radius: 10px;
             aspect-ratio: 1/1;
-
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             
             cursor: pointer;
             transform-style: preserve-3d;
             transform-style: preserve-3d;
             transition: ease-in 0.3s;
             transform: perspective(600px) rotateY(0deg);
+
         }
 
         /* .card .cardName {
@@ -94,24 +90,53 @@
             background-color: blanchedalmond;
             /* transform: perspective(600px) rotateY(180deg); */
         }
-        
-        .cardFront {
+
+        .cardContent {
             position: absolute;
+            text-align: center;
             width: 100%;
-            margin: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cardContent .btn {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .front {
             transform: rotateY(0deg);
         }
 
         /* 돌아가있기 떄문에 다시 돌려야 함 */
-        .cardBack {
-            transform: rotateY(180deg);
+        .back {
+            transform: rotateY(180deg) translateZ(-1px);
             display: none;
         }
 
         .cardBackShow {
             display: block;
         }
-    
+
+        .animalInfoBtn {
+            background-color: rgb(255, 255, 255);
+            width: 40%;
+            margin-top: 5px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            height: fit-content;
+            border-radius: 10px;
+            font-size: 5px;
+            transition: 0.2s ease-in-out;
+            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+        }
+
+        .animalInfoBtn:hover {
+            background-color: #FFE2EE;
+        }
+
     </style>
 
 </head>
@@ -130,21 +155,25 @@
         </div>
 
         <div class="foodCards">
-            <div class="card" :class="checked(boolean)" v-for="(boolean, i) in flip" @click.self="flipCard(i)">
+            <div class="card" :class="checked(boolean)" v-for="(boolean, i) in flip" @click="flipCard(i)">
+                
                 <!-- 앞에 부분 -->
-                <div class="cardFront">
-                    <h3 >{{foodList[i].name}}</h3>
+                <div class="cardContent front">
+                    <h3>{{foodList[i].name}}</h3>
                 </div>
 
                 <!-- 돌렸을 때 -->
-                <div class="cardBack" :class="checked(boolean)">
-                    <div @click="infoPage">
-                        <p>멍멍이</p>
-                    </div>
-                    <div @click="infoPage">
-                        <p>야옹이</p>
+                <div class="cardContent">
+                    <div v-for="animal in animals" class="back" :class="checked(boolean)">
+                        <div class="btn">
+                            <div class="animalInfoBtn" @click="infoPage(foodList[i].id, animal.id)">
+                                {{animal.name}} <br>
+                                {{eatable(foodList[i].id, animal.id)}}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -194,37 +223,63 @@
             data: {
                 foodList: [],
                 flip: [],
+                animals: [],
+                foodInfo: [],
+                animalInfo: null
             },
             created() {
                 axios.get("/foodListAll").then(res => {
-                    console.log(res.data)
                     this.foodList = res.data;
-                    console.log(this.foodList);
                     this.foodList.forEach(v => {
                         this.flip.push(true);
                     })
+                });
+                axios.get("/getAnimalType").then(res => {
+                    this.animals = res.data;
+                });
+                axios.get("/getFoodInfoAll").then(res => {
+                    console.log(res.data);
+                    this.foodInfo = res.data;
                 })
             },
             methods: {
                 flipCard(i) {
-                    // cardTag.classList.toggle('flip');
-
                     // Vue의 인덱스값 사용 제한 
                     // 실시간 업데이트에 대한 제한으로 아래 함수를 활용
                     // Vue.set(바꾸고 싶은 데이터, 데이터 인덱스 위치, 새로 작성하는 값)
                     this.$set(this.flip, i, !this.flip[i]);
-
-                    // return !this.flip[i] ? {flip: true} : {flip: false};
-                    
-                    // console.log(this.foodList[i]);
                 },
-                infoPage() {
-                    alert("test");
-                },
-
                 checked(boolean) {
                     return boolean? { flip: false, cardBackShow: false } : { flip: true ,cardBackShow: true }
-                }
+                },
+                eatable(foodId, animalId) {
+                    let check = ""
+                    this.foodInfo.forEach(v => {
+                        if(v.food.id === foodId && v.animalInfo.animalType === animalId) {
+                            check = v.animalInfo.eatable;
+                        }
+                    })
+                    return (check === 1) ? "💚" : "❌";
+                },
+                infoPage(foodId, animalId) {
+                    let info = "";
+                    info = this.foodInfo.filter(v => v.food.id === foodId && v.animalInfo.animalType === animalId)
+                    
+                    if(info.length === 0) {
+                        alert("죄송합니다 아직 정보가 없습니다");
+                    } else {
+                        axios({
+                            method: "get",
+                            url: "/getAnimalInfo",
+                            params: {
+                                id : info[0].id
+                            }
+                        }).then(res => {
+                            this.animalInfo = res.data;
+                            alert(this.animalInfo.info);
+                        })
+                    }
+                },
             }
         });
 

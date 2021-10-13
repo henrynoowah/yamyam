@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.project.dao.AnimalInfoRepository;
+import kr.pe.project.dao.FoodInfoRepository;
 import kr.pe.project.dao.FoodRepository;
 import kr.pe.project.model.domain.AnimalInfo;
 import kr.pe.project.model.domain.Food;
+import kr.pe.project.model.domain.FoodInfo;
 import kr.pe.project.model.domain.dto.AnimalInfoDTO;
 
 
@@ -25,6 +27,9 @@ public class FoodController {
 	
 	@Autowired
 	private AnimalInfoRepository animalInfoDao;
+	
+	@Autowired
+	private FoodInfoRepository foodInfoDao;
 	
 	// 일반회원 + 관리자용 메소드
 	// 전체 조회
@@ -64,12 +69,12 @@ public class FoodController {
 		}
 	}
 	
-	@GetMapping("getAnimalInfo")
-	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
-		
-		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
-		return null;
-	}
+//	@GetMapping("getAnimalInfo")
+//	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
+//		
+//		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
+//		return null;
+//	}
 	
 	//동물로 조회
 //	@GetMapping("searchAnimal")
@@ -220,4 +225,76 @@ public class FoodController {
 ////		return "" + cat.getInfo();
 ////	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	
+//	@GetMapping("getAnimalInfo")
+//	public AnimalInfo animalInfo() {
+//		return null;
+//	}
+//	
+//	
+//	
+	
+	
+	@GetMapping("getAnimalInfo")
+	public AnimalInfo getAnimalInfo(Long id) {
+		AnimalInfo info = animalInfoDao.findById(id).get();
+		return info;
+	}
+	
+	
+	@GetMapping("getFoodInfoAll")
+	public Iterable<FoodInfo> getFoodInfoAll() {
+		
+		Iterable<FoodInfo> foodInfoAll = foodInfoDao.findAll();
+		
+		return foodInfoAll;
+		
+		
+	}
 }

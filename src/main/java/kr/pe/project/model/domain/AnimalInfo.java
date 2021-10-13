@@ -3,8 +3,12 @@ package kr.pe.project.model.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +24,7 @@ public class AnimalInfo {
 	
 	@Id
 	@Column(name = "animal_idx")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(name = "eatable", nullable = false)
@@ -34,6 +39,7 @@ public class AnimalInfo {
 	@Column(name = "info", nullable = false)
 	private String info;
 	
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.LAZY, mappedBy = "animalInfo")
 	private FoodInfo animal;
 	

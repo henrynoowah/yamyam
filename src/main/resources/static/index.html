@@ -170,10 +170,8 @@
                 <input type="text" v-model.lazy:value="name">
                 <label for="type">{{name}}는 어떤 동물인가요?</label>
                 <select name="type" v-model:value="animalType">
-                    <option value="animal.id" v-for="animal in animals">{{animal.name}}</option>
-                    <!-- <option value="0">멍멍이</option>
-                    <option value="1">야옹이</option> -->
-                  </select>
+                    <option :value="animal.id" v-for="animal in animals">{{animal.name}}</option>
+                </select>
                 <label for="breed">{{name}}의 종을 입력해주세요</label>
                 <input type="text" v-model:value="breed">
                 <label for="weight">무게를 입력해주세요(kg)</label>
