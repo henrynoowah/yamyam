@@ -109,7 +109,7 @@ public class FoodController {
 		
 		catDao.save(info.toEntity());
 		
-		food.setCat(info.toEntity());
+//		food.setCat(info.toEntity());
 		dao.save(food);
 		
 		return "추가 완료";
