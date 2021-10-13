@@ -12,10 +12,15 @@
     <title>얌얌 꿀떡!</title>
 
     <style>
-
+    
+		* ::-webkit-scrollbar {
+		  display: none;
+		}
+		 
         body {
             background-color: #FFE2EE;
             margin: 0px;
+
         }
 
         #header{
@@ -46,6 +51,26 @@
         
         .navLinks li {
             list-style: none;
+            transition: 1s ease-in;
+        }
+
+        .navLinks li button {
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .navLinks li:hover .dog {
+            display: block;
+        }
+
+        .navLinks li .dog {
+            position: absolute;
+            transform: translateX(-20px);
+            display: none;
         }
 
         .searchTool {
@@ -75,20 +100,14 @@
             transform-style: preserve-3d;
             transition: ease-in 0.3s;
             transform: perspective(600px) rotateY(0deg);
-
         }
 
-        /* .card .cardName {
-            pointer-events: none;
-        } */
-        
         .flip {
             transform: perspective(600px) rotateY(180deg);
         }
 
         .card:hover {
             background-color: blanchedalmond;
-            /* transform: perspective(600px) rotateY(180deg); */
         }
 
         .cardContent {
@@ -115,12 +134,13 @@
             transform: rotateY(180deg) translateZ(-1px);
             display: none;
         }
-
+        
         .cardBackShow {
             display: block;
         }
 
         .animalInfoBtn {
+            backface-visibility: hidden;
             background-color: rgb(255, 255, 255);
             width: 40%;
             margin-top: 5px;
@@ -130,7 +150,7 @@
             border-radius: 10px;
             font-size: 5px;
             transition: 0.2s ease-in-out;
-            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+            /* filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192)); */
         }
 
         .animalInfoBtn:hover {
@@ -150,7 +170,8 @@
         </div>
 
         <div class="searchTool">
-            여기에 서치바랑 카테고리 버튼들이 들어갈꺼임!
+            2021-10-12 : 여기에 서치바랑 카테고리 버튼들이 들어갈꺼임!<br>
+            2021-10-11 : 시간 없어서 못할듯!
             <hr>
         </div>
 
@@ -182,10 +203,22 @@
         <div class="navContents">
             <a href="foodList.html"><h3>Yam! Yam!</h3></a>
             <ul class="navLinks">
-                <li><a href="myPage">My Page</a></li>
-                <li><a href="myFavorites">Favorites</a></li>
-                <li v-if="user.admin == 1"><a href="addFood">Add Food</a></li>
-                <li><button @click="logout">Log Out</a></li>
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="myPage">My Page</button>
+                </li>
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="favorites">Favorites</button>
+                </li>
+                <li v-if="user.admin == 1">
+                    <div class="dog">🐶</div>
+                    <button @click="addFood">Add Food</button>
+                </li>
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="logout">Log Out</button>
+                </li>
             </ul>
         </div>
     </template>
@@ -203,6 +236,19 @@
                 this.user = JSON.parse(sessionStorage.getItem("user"));
             },
             methods: {
+                hover2(a) {
+                    console.log(a);
+                    a.removeItem("🐶");
+                },
+                myPage() {
+                    alert("myPage");
+                },
+                favorites() {
+                    alert("favorites");
+                },
+                addFood() {
+                    alert("addFood");
+                },
                 logout() {
                     axios({
                         method: "get",

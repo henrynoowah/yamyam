@@ -294,7 +294,5 @@ public class FoodController {
 		Iterable<FoodInfo> foodInfoAll = foodInfoDao.findAll();
 		
 		return foodInfoAll;
-		
-		
 	}
 }
