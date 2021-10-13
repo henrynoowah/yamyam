@@ -29,9 +29,17 @@ public class FoodDTO {
 		}
 	}
 	
-	@Getter
-	@Setter
-	public static class Update extends Add {
+	@Data
+	@AllArgsConstructor
+	public static class Update {
 		private long id;
+		private String name;
+		private String category;
+		
+		public Food toEntity() {
+			return Food.builder().id(id)
+								 .name(name)
+								 .category(category).build();
+		}
 	}
 }
