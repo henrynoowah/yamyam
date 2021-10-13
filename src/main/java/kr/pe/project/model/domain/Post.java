@@ -40,7 +40,7 @@ public class Post {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id")
-	private  PetUser user;
+	private PetUser user;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="food_idx")

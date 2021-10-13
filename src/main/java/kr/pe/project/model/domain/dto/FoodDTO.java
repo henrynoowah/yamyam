@@ -1,13 +1,9 @@
 package kr.pe.project.model.domain.dto;
 
 import kr.pe.project.model.domain.Food;
-import kr.pe.project.model.domain.FoodCat;
-import kr.pe.project.model.domain.FoodDog;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class FoodDTO {
 	
@@ -17,8 +13,6 @@ public class FoodDTO {
 	public static class Add {
 		private String name;
 		private String category;
-		private FoodDog dog;
-		private FoodCat cat;
 		
 		public Food toEntity() {
 			return Food.builder().name(name)
