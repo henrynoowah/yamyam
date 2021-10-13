@@ -43,7 +43,7 @@ public class FoodController {
 		return foodListAll;
 	}
 	
-	//음식명으로 조회
+	//음식명으로 음식 조회
 	@GetMapping("searchFoodName")
 	public Food searchFoodName(String foodName) {
 		Food food = dao.findFoodByName(foodName); //'사과'로 검색한다면 사과뿐만 아니라, '사과'가 들어간 음식 모두 조회하기? ex 사과주
@@ -57,7 +57,7 @@ public class FoodController {
 		}
 	}
 	
-	//카테고리로 조회 
+	//카테고리로 음식 조회 
 	@GetMapping("searchFoodCategory")
 	public List<Food> searchFoodCategory(String category) {
 		List<Food> foods = dao.findFoodByCategory(category);
@@ -71,7 +71,7 @@ public class FoodController {
 		}
 	}
 	
-	//동물로 조회
+	//동물로 음식 조회
 	@GetMapping("searchAnimal")
 	public List searchAnimal(String animalName) throws Exception {
 		if (animalName.equals("강아지")) {
@@ -83,6 +83,20 @@ public class FoodController {
 		} else {
 			throw new Exception("해당 동물에 관한 정보가 없습니다");
 		}
+	}
+	
+	//동물 info 조회
+	@GetMapping("searchAnimalInfo")
+	public Object searchAnimalInfo(long foodId, String breed) {
+		if (breed.equals("강아지")) {
+			return dogDao.findById(foodId);
+		}
+		
+		if (breed.equals("고양이")) {
+			return catDao.findById(foodId);
+		}
+		
+		return null;
 	}
 	
 	/* administrator */
@@ -103,15 +117,12 @@ public class FoodController {
 	
 	//add foodCat
 	@GetMapping("addInfoCat")
-	public String addInfoCat(String foodName, FoodCatDTO.Add info) {
-		Food food = dao.findFoodByName(foodName);
-		info.setId(food.getId());
+	public String addInfoCat(FoodCatDTO.Add info) {
+		System.out.println(dao.findById(info.getId()).get());
+		info.setFood(dao.findById(info.getId()).get());
+		System.out.println(info.toString());
 		
 		catDao.save(info.toEntity());
-		
-//		food.setCat(info.toEntity());
-		dao.save(food);
-		
 		return "추가 완료";
 	}
 	
@@ -119,7 +130,7 @@ public class FoodController {
 	@GetMapping("addInfoDog")
 	public String addInfoDog(String name, FoodDogDTO.Add info) {
 		Food food = dao.findFoodByName(name);
-		info.setId(food.getId());
+		
 		
 		dogDao.save(info.toEntity());
 		
@@ -128,7 +139,6 @@ public class FoodController {
 	
 	//edit foodCat
 	@GetMapping("editFoodCat")
-	//빈칸일 경우 프론트에서 경고창 뜨게 가능?
 	public String editFoodCat(FoodCatDTO.Update info) throws Exception { 
 		if (info.getAmount() != null
 			&& info.getEatable() != null
@@ -162,24 +172,13 @@ public class FoodController {
 		Food food = dao.findById(info.getId()).get();
 		food.setName(info.getName());
 		food.setCategory(info.getCategory());
-		
-		//동물이 늘어나면 set... 코드가 한 줄씩 계속 늘어나겠군,,,, 비효율적인 것 같다
-		try {
-			food.setCat(catDao.findById(info.getId()).get());
-		} catch (NoSuchElementException e) {
-			System.out.println("cat 정보 없음");
-		}
-		
-		try {
-			food.setDog(dogDao.findById(info.getId()).get());
-		} catch (NoSuchElementException e) {
-			System.out.println("dog 정보 없음");
-		}
-	
+
 		dao.save(food);
 		
 		return "test";
 	}
+	
+	
 	
 	// 직접 검색해서 찾는 조회
 	// 1. Search Engine - 어떤 걸 검색할건지 (동물로? 음식 명으로? 음식 카테고리로?)

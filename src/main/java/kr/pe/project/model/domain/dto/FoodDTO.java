@@ -17,8 +17,8 @@ public class FoodDTO {
 	public static class Add {
 		private String name;
 		private String category;
-		private FoodDog dog;
-		private FoodCat cat;
+//		private FoodDog dog;
+//		private FoodCat cat;
 		
 		public Food toEntity() {
 			return Food.builder().name(name)

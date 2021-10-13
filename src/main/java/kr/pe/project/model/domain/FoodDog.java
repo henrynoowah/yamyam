@@ -21,7 +21,7 @@ import lombok.Setter;
 public class FoodDog extends FoodInfo {
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId
+	@MapsId //부모의 id를 받아옴
 	private Food food;
 
 }

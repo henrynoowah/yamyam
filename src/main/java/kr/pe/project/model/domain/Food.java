@@ -22,7 +22,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-//@ToString
 @Builder
 
 @Entity(name = "food_list")
