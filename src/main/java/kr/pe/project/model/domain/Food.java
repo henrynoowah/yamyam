@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,11 +38,11 @@ public class Food {
 	
 	@Column(name = "food_category", nullable = false)	
 	private String category;
-	 
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
 	private List<Post> postList;
 	
-	@JsonIgnore
+	@JsonIgnoreProperties({"animalInfo", "food"})
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
 	private List<FoodInfo> AnimalList;
 	

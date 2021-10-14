@@ -185,6 +185,10 @@
 
     <script>
 
+        window.onload = () => {
+            sessionStorage.removeItem("user");
+        };
+
         let eventBus = new Vue();
 
         Vue.component("login", {
@@ -282,6 +286,7 @@
                 }
             }
         });
+
 
     </script>
 
