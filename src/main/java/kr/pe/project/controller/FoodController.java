@@ -34,6 +34,9 @@ public class FoodController {
 	@Autowired
 	private FoodInfoRepository foodInfoDao;
 	
+	@Autowired
+	private FoodInfoRepository foodInfoDao;
+	
 	// 일반회원 + 관리자용 메소드
 	// 전체 조회
 	@GetMapping("foodListAll")
@@ -72,21 +75,22 @@ public class FoodController {
 		}
 	}
 	
-<<<<<<< HEAD
+
 	@GetMapping("getAnimalInfo")
 	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
 		
 		AnimalInfo get = animalInfofoodDao.findById(animal.getId()).get();
 		return null;
 	}
-=======
+
 //	@GetMapping("getAnimalInfo")
 //	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
 //		
 //		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
 //		return null;
 //	}
->>>>>>> d6ba66d5ffa72080f14e44125b31c47bb3dfcbed
+
+
 	
 	//동물로 조회
 //	@GetMapping("searchAnimal")
@@ -145,7 +149,7 @@ public class FoodController {
 		return "수정 완료";
 	}
 	
-<<<<<<< HEAD
+
 	//delete food
 	@GetMapping("deleteFood")
 	public String deleteFodd(long foodId) {
@@ -173,63 +177,7 @@ public class FoodController {
 		
 		return info.toEntity();
 	}	
-=======
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	
-//	@GetMapping("getAnimalInfo")
-//	public AnimalInfo animalInfo() {
-//		return null;
-//	}
-//	
-//	
-//	
-	
-	
+
 	@GetMapping("getAnimalInfo")
 	public AnimalInfo getAnimalInfo(Long id) {
 		AnimalInfo info = animalInfoDao.findById(id).get();
@@ -244,5 +192,5 @@ public class FoodController {
 		
 		return foodInfoAll;
 	}
->>>>>>> d6ba66d5ffa72080f14e44125b31c47bb3dfcbed
+
 }

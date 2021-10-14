@@ -157,6 +157,23 @@
             background-color: #FFE2EE;
         }
 
+        #infoPop {
+            position: fixed;
+            height: 60vh;
+            width: 50%;
+            margin: auto;
+            background-color: #FFE2EE;
+            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+            transform: translateY(-100px);
+        }
+
+        .infoContent .li {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+        }
+      
     </style>
 
 </head>
@@ -196,9 +213,14 @@
                 </div>
 
             </div>
+            <div id="infoPop" v-if="infoShow">
+                <info-com class="infoContent" :animalinfo="animalInfo" :animaltype="animals"></info-com>
+                <button @click="infoShowToggle">닫기</button>
+            </div>
         </div>
-    </div>
 
+    </div>
+    
     <template id="headerNav">
         <div class="navContents">
             <a href="foodList.html"><h3>Yam! Yam!</h3></a>
@@ -223,7 +245,32 @@
         </div>
     </template>
 
+    <template id="infoPage">
+        <div>
+            <div>
+                {{animalinfo.animal.food.name}}
+            </div>
+            <hr>
+            <div>
+                <ul>
+                    <li>
+                        먹어도 될까요? : <br>
+                        <div v-if="eatableInfo(animalinfo.animal.eatable)">{{animalinfo.amount}}</div>
+                        <div v-else>먹으면 큰일나요 🤢</div>
+                    </li>
+                    <li>
+                        설명: <br>
+                        {{animalinfo.info}}
+                    </li>
+                </ul>
+                <button v-if="user.admin">수정하기</button>
+            </div>
+        </div>
+    </template>
+
     <script>
+
+        let eventBus = new Vue();
         
         Vue.component("header-nav", {
             template: "#headerNav",
@@ -234,6 +281,7 @@
             },
             created() {
                 this.user = JSON.parse(sessionStorage.getItem("user"));
+                // eventBus.$emit("user", this.user);
             },
             methods: {
                 hover2(a) {
@@ -264,6 +312,25 @@
             },
         });
 
+        Vue.component("info-com", {
+            template: "#infoPage",
+            props: ["animalinfo"],
+            data(){
+                return {
+                    user: null
+                }
+            },
+            created() {
+                // 중복작업임 $emit이 안되서 일단 세션 다시 가져오는 방법 ㅠ
+                this.user = JSON.parse(sessionStorage.getItem("user"));
+            },
+            methods: {
+                eatableInfo(boolean) {
+                    return boolean? true : false;
+                }
+            }
+        })
+
         new Vue({
             el: "#foodListContainer",
             data: {
@@ -271,9 +338,12 @@
                 flip: [],
                 animals: [],
                 foodInfo: [],
-                animalInfo: null
+                infoShow: false,
+                animalInfo: null,
+                user: null
             },
-            created() {
+            created() {         
+
                 axios.get("/foodListAll").then(res => {
                     this.foodList = res.data;
                     this.foodList.forEach(v => {
@@ -299,18 +369,23 @@
                     return boolean? { flip: false, cardBackShow: false } : { flip: true ,cardBackShow: true }
                 },
                 eatable(foodId, animalId) {
-                    let check = ""
+                    let check = "";
+                    let result = "";
                     this.foodInfo.forEach(v => {
                         if(v.food.id === foodId && v.animalInfo.animalType === animalId) {
                             check = v.animalInfo.eatable;
                         }
                     })
-                    return (check === 1) ? "💚" : "❌";
+                    result = (check === 1) ? "💚" : "❌";
+
+                    return result;
+                },
+                infoShowToggle(){
+                    this.infoShow = !this.infoShow;
                 },
                 infoPage(foodId, animalId) {
                     let info = "";
                     info = this.foodInfo.filter(v => v.food.id === foodId && v.animalInfo.animalType === animalId)
-                    
                     if(info.length === 0) {
                         alert("죄송합니다 아직 정보가 없습니다");
                     } else {
@@ -318,11 +393,11 @@
                             method: "get",
                             url: "/getAnimalInfo",
                             params: {
-                                id : info[0].id
+                                id : info[0].animalInfo.id
                             }
                         }).then(res => {
                             this.animalInfo = res.data;
-                            alert(this.animalInfo.info);
+                            this.infoShow = !this.infoShow;
                         })
                     }
                 },
