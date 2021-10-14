@@ -26,13 +26,7 @@ public class FoodController {
 	private FoodRepository foodDao;
 	
 	@Autowired
-	private AnimalInfoRepository animalInfofoodDao;
-	
-	@Autowired
-	private FoodInfoRepository foodInfoDao;
-	
-	@Autowired
-	private FoodInfoRepository foodInfoDao;
+	private AnimalInfoRepository animalInfoDao;
 	
 	@Autowired
 	private FoodInfoRepository foodInfoDao;
@@ -76,12 +70,14 @@ public class FoodController {
 	}
 	
 
-	@GetMapping("getAnimalInfo")
-	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
-		
-		AnimalInfo get = animalInfofoodDao.findById(animal.getId()).get();
-		return null;
-	}
+//	@GetMapping("getAnimalInfo")
+//	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
+//		
+//		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
+//		return null;
+//	}
+	
+	
 
 //	@GetMapping("getAnimalInfo")
 //	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
@@ -163,7 +159,7 @@ public class FoodController {
 	public AnimalInfo addAnimalInfo(AnimalInfoDTO.Add info, long foodId) throws Exception {
 		AnimalInfo animalInfo = new AnimalInfo();
 		try {
-			animalInfo = animalInfofoodDao.save(info.toEntity());
+			animalInfo = animalInfoDao.save(info.toEntity());
 
 			FoodInfo foodInfo = new FoodInfo();
 			foodInfo.setId(animalInfo.getId());
