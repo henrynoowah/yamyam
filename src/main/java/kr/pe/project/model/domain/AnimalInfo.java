@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,8 +39,9 @@ public class AnimalInfo {
 	@Column(name = "info", nullable = false)
 	private String info;
 	
-	@JsonIgnore
+	@JsonIgnoreProperties({"animalInfo"})
 	@OneToOne(fetch=FetchType.LAZY, mappedBy = "animalInfo")
 	private FoodInfo animal;
+	
 	
 }
