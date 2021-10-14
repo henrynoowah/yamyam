@@ -69,25 +69,21 @@ public class FoodController {
 		}
 	}
 	
-
-//	@GetMapping("getAnimalInfo")
-//	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
-//		
-//		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
-//		return null;
-//	}
+	@GetMapping("getAnimalInfo")
+	public AnimalInfo getAnimalInfo(Long id) {
+		AnimalInfo info = animalInfoDao.findById(id).get();
+		return info;
+	}
 	
 	
+	@GetMapping("getFoodInfoAll")
+	public Iterable<FoodInfo> getFoodInfoAll() {
+		
+		Iterable<FoodInfo> foodInfoAll = foodInfoDao.findAll();
+		
+		return foodInfoAll;
+	}
 
-//	@GetMapping("getAnimalInfo")
-//	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
-//		
-//		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
-//		return null;
-//	}
-
-
-	
 	//동물로 조회
 //	@GetMapping("searchAnimal")
 //	public List searchAnimal(String animalName) throws Exception {
@@ -154,7 +150,7 @@ public class FoodController {
 		return "삭제 완료";
 	}
 	
-	//add animalInfo - 미테스트 개그튼그
+	//add food
 	@GetMapping("addAnimalInfo")
 	public AnimalInfo addAnimalInfo(AnimalInfoDTO.Add info, long foodId) throws Exception {
 		AnimalInfo animalInfo = new AnimalInfo();
@@ -173,20 +169,4 @@ public class FoodController {
 		
 		return info.toEntity();
 	}	
-
-	@GetMapping("getAnimalInfo")
-	public AnimalInfo getAnimalInfo(Long id) {
-		AnimalInfo info = animalInfoDao.findById(id).get();
-		return info;
-	}
-	
-	
-	@GetMapping("getFoodInfoAll")
-	public Iterable<FoodInfo> getFoodInfoAll() {
-		
-		Iterable<FoodInfo> foodInfoAll = foodInfoDao.findAll();
-		
-		return foodInfoAll;
-	}
-
 }
