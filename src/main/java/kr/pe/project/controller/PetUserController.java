@@ -73,6 +73,22 @@ public class PetUserController {
 		}
 		return "회원가입 성공!";
 	}
+
+	@PostMapping("editPetUser")
+	public void editPetUser(PetUserDTO.Register petUser) throws Exception {
+		
+		if (petUser.getAnimalType().equals("") || petUser.getName().equals("") || petUser.getBreed().equals("") || petUser.getWeight().equals("")) {
+			throw new Exception("작성하지 않은 항목이 존재합니다.");
+		} else {
+			dao.save(petUser.toEntity());
+		}
 	
+	}
+//	@ExceptionHandler
+//	public String PetUserException(Exception e) {
+//		System.err.println(e.getMessage());
+//		
+//		return ".getMessage();
+//	}
 
 }

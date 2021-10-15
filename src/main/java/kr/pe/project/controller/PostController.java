@@ -3,6 +3,7 @@ package kr.pe.project.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.project.dao.FoodRepository;
@@ -29,7 +30,7 @@ public class PostController {
 	private FoodRepository foodDao;
 	
 	//addPost
-	@GetMapping("addPost")
+	@PostMapping("addPost")
 	public Post addPost(PostDTO.Write post, String userId, long foodId) throws Exception {
 		PetUser user = userDao.findById(userId).get();
 		post.setUser(user);
@@ -54,13 +55,13 @@ public class PostController {
 		String info = post.getInfo();
 		String taste = post.getTaste();
 		Post editPost = postDao.findById(postId).get();
-		if (star != null && info != null && taste != null) {
-			editPost.setStar(post.getStar());
-			editPost.setInfo(post.getTaste());
-			editPost.setTaste(post.getInfo());
-			postDao.save(editPost);
+		if (star.equals("") || info.equals("") || taste.equals("")) {
+			throw new Exception("작성되지 않은 항목이 있습니다.");
 			} else {
-				throw new Exception("작성되지 않은 항목이 있습니다.");
+				editPost.setStar(post.getStar());
+				editPost.setTaste(post.getInfo());
+				editPost.setInfo(post.getTaste());
+				postDao.save(editPost);
 			}
 		
 		return editPost;

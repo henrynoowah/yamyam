@@ -42,23 +42,34 @@
 
 <body>
     
-    <div id="AddReviewContainer">
+    <div id="MyPageContainer">
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
         </div>
 
-
         <!-- 여기서부터 리뷰 페이지 작성 -->
         <div id="bodyContainer">
             <div class="addPageContainer">
-                <form @submit.prevent="submitReview" class="addPageForm">
-                    <label for="star" >별점을 적어주세요</label>
-                    <input type="text" v-model:value="star">
-                    <label for="taste">맛을 적어주세요</label>
-                    <input type="text" v-model:value="taste">
-                    <label for="info">상세한 설명을 적어주세요</label>
-                    <input type="text" v-model:value="info">
+                <form @submit.prevent="submitUserInfo" class="addPageForm">
+                    <label for="id" >ID</label>
+                    <span type="text">{{id}}</span>
+
+                    <label for="name">Name</label>
+                    <input type="text" v-model:value="name">
+
+                    <label for="Breed">Animal Type</label>
+                    <select name="type" v-model:value="animalType" >
+                        <option :value="null" hidden="" disabled="disabled" selected="selected">{{defaultType}}</option>
+                        <option :value="animal.id" v-for="animal in animals">{{animal.name}}</option>
+                    </select>
+
+                    <label for="breed" >Breed</label>
+                    <input type="text" v-model:value="breed">
+
+                    <label for="weight" >Weight (Kg)</label>
+                    <input type="text" v-model:value="weight">
+
                     <input type="submit" value="등록">
                 </form>
             </div>
@@ -108,7 +119,7 @@
             },
             created() {
                 this.user = JSON.parse(sessionStorage.getItem("user"));
-                eventBus.$emit("user", this.user.id);
+                eventBus.$emit("user", this.user);
             },
             methods: {
                 hover2(a) {
@@ -116,7 +127,7 @@
                     a.removeItem("🐶");
                 },
                 myPage() {
-                    window.location.href="addPage.html"
+                    alert("myPage");
                 },
                 favorites() {
                     alert("favorites");
@@ -140,29 +151,46 @@
         });
 
         new Vue({
-            el: "#AddReviewContainer",
+            el: "#MyPageContainer",
             data: {
-                star: null,
-                taste: null,
-                info: null,
-                userId: null
+                defaultType: null,
+                animalType: null,
+                animals: [],
+                breed: null,
+                id: null,
+                pw: null,
+                name: null,
+                weight: null,
+                admin: null,
             },
             created() {
-                eventBus.$on("user", userId => {
-                    this.userId = userId;
+                eventBus.$on("user", user => {
+                    axios.get("/getAnimalType").then(res => {
+                    this.animals = res.data;
+                    this.defaultType = res.data[user.animalType-1].name;
+                    this.animalType = user.animalType
+                    })
+                    this.breed = user.breed;
+                    this.id = user.id;
+                    this.pw = user.pw;
+                    this.name = user.name;
+                    this.weight = user.weight;
+                    this.admin = user.admin
                 })
             },
             methods: {
-                submitReview: function() {
+                submitUserInfo: function() {
                     axios({
                         method: "post",
-                        url: "/addPost",
+                        url: "/editPetUser",
                         params: {
-                            userId: this.userId,
-                            foodId: 1,
-                            star: this.star,
-                            taste: this.taste,
-                            info: this.info
+                            id: this.id,
+                            pw: this.pw,
+                            name: this.name,
+                            animalType: this.animalType,
+                            breed: this.breed,
+                            admin: this.admin,
+                            weight: this.weight
                         }
                     })
   
