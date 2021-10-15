@@ -184,7 +184,7 @@
                 </div>
                 <div id="infoPop" v-if="infoShow">
                     <info-com class="infoContent" :animalinfo="animalInfo" :animaltype="animals"></info-com>
-                    <button @click="addReview">리뷰달기</button>
+                    <button @click="addReview(animalInfo.animal.food.id)">리뷰달기</button>
                     <button @click="infoShowToggle">닫기</button>
                 </div>
             </div>
@@ -244,7 +244,7 @@
                     </div>        
                 </div>
             </div>
-            <button v-if="user.admin">수정하기</button>
+            <button v-if="admin">수정하기</button>
         </div>
     </template>
 
@@ -281,10 +281,13 @@
                 }
             },
             created() {
-                this.user = JSON.parse(sessionStorage.getItem("user"));
-                // eventBus.$emit("user", this.user);
+                this.getUser()
             },
             methods: {
+                getUser() {
+                    this.user = JSON.parse(sessionStorage.getItem("user"));
+                    eventBus.$emit("user", this.user);
+                },
                 hover2(a) {
                     console.log(a);
                     a.removeItem("🐶");
@@ -318,19 +321,18 @@
             props: ["animalinfo"],
             data(){
                 return {
-                    user: null
+                    admin: null
                 }
             },
             created() {
-                // 중복작업임 $emit이 안되서 일단 세션 다시 가져오는 방법 ㅠ
-                this.user = JSON.parse(sessionStorage.getItem("user"));
+                this.admin = JSON.parse(sessionStorage.getItem("user")).admin;
             },
             methods: {
                 eatableInfo(boolean) {
                     return boolean? true : false;
                 }
             }
-        })
+        });
 
         new Vue({
             el: "#foodListContainer",
@@ -343,7 +345,10 @@
                 animalInfo: null,
                 user: null
             },
-            async created() {         
+            async created() { 
+                eventBus.$on("user", user => {
+                    this.user = user;
+                });
                 await axios.get("/foodListAll").then(res => {
                     this.foodList = res.data;
                     this.foodList.forEach(v => {
@@ -393,7 +398,7 @@
                     let info = "";
                     info = this.foodInfo.filter(v => v.food.id === foodId && v.animalInfo.animalType === animalId)
                     if(info.length === 0) {
-                        alert("죄송합니다 아직 정보가 없습니다");
+                        this.user.admin === 1 ? this.addAnimalInfo(foodId, animalId) : alert("죄송합니다 아직 정보가 없습니다");
                     } else {
                         axios({
                             method: "get",
@@ -409,8 +414,17 @@
                         })
                     }
                 },
-                addReview() {
+                addReview(foodId) {
+                    localStorage.setItem("foodId", foodId);
                     window.location.href = "addReview.html";
+                },
+                addAnimalInfo(foodId, animalId) {
+                    let animalInfo = {};
+                    animalInfo["foodId"] = foodId
+                    animalInfo["animalType"] = animalId
+
+                    localStorage.setItem("animalInfo", JSON.stringify(animalInfo));
+                    window.location.href = "addAnimalInfo.html";
                 }
             }
         });

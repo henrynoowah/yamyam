@@ -42,22 +42,29 @@
 
 <body>
     
-    <div id="AddReviewContainer">
+    <div id="AddAnimalInfoContainer">
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
         </div>
 
-
+        amount: null,
+        eatable: null,
+        info: null,
         <!-- 여기서부터 동물별 음식추가 폼 작성 -->
 
         <div id="bodyContainer">
             <div class="addPageContainer">
-                <form class="addPageForm">
-                    <label for="name" >음식 이름을 적어주세요</label>
-                    <input type="text" value="name">
-                    <label for="category">음식 분류를 적어주세요</label>
-                    <input type="text" value="category">
+                <form @submit.prevent="addAnimlInfo" class="addPageForm">
+                    <label for="amount" >적절량</label>
+                    <input type="text" v-model:value="amount">
+                    <label for="eatable">먹어도 되나요?</label>
+                    <select name="type" v-model:value="eatable">
+                        <option :value="1">💚</option>
+                        <option :value="0">❌</option>
+                    </select>
+                    <label for="info">상세한 설명을 적어주세요</label>
+                    <input type="text" v-model:value="info">
                     <input type="submit" value="등록">
                 </form>
             </div>
@@ -67,8 +74,6 @@
     </div>
 
 
-
-    
     <template id="headerNav">
         <div class="navContents">
             <a href="foodList.html"><h3>Yam! Yam!</h3></a>
@@ -94,10 +99,26 @@
     </template>
 
     <script>
-        const sessionEnd = (err) => {
-            alert(err);
-            window.location.href = "index.html"
-            console.log(err)
+
+        window.onload = () => {
+            axios({
+                method: "post",
+                url: "/checkSession"
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+                exceptionHandler(err);
+            })
+        };
+
+        exceptionHandler = (err) => {
+            let message = err.response.data.message;
+            if(message === "session end") {
+                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+                window.location.href="index.html"
+            } else {
+                alert(message);
+            }
         }
 
         let eventBus = new Vue();
@@ -136,14 +157,51 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        sessionEnd(err.response.data.message);
+                        exceptionHandler(err);
                     })
                 },
             },
         });
 
         new Vue({
-            el: "#AddReviewContainer"
+            el: "#AddAnimalInfoContainer",
+            data: {
+                //AnimalInfo 추가에 필요한 데이터
+                amount: null,
+                animalType: null,
+                eatable: null,
+                info: null,
+                //FoodInfo와 연동할 음식 id
+                foodId: null
+            },
+            created() {
+                const foodInfo = JSON.parse(localStorage.getItem("animalInfo"));
+                console.log(foodInfo)
+                this.foodId = foodInfo.foodId;
+                this.animalType = foodInfo.animalType;
+                localStorage.removeItem("animalInfo");
+            },
+            methods: {
+                addAnimlInfo() {
+                    axios({
+                        method: "put",
+                        url: "/addAnimalInfo",
+                        params: {
+                            amount: this.amount,
+                            animalType: this.animalType,
+                            eatable: this.eatable,
+                            info: this.info,
+                            foodId: this.foodId
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                        window.location.href = "foodList.html";
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                }
+            }
+
         });
 
     </script>

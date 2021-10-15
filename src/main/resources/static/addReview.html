@@ -91,10 +91,26 @@
     </template>
 
     <script>
-        const sessionEnd = (err) => {
-            alert(err);
-            window.location.href = "index.html"
-            console.log(err)
+
+        window.onload = () => {
+            axios({
+                method: "post",
+                url: "/checkSession"
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+                exceptionHandler(err);
+            })
+        };
+
+        exceptionHandler = (err) => {
+            let message = err.response.data.message;
+            if(message === "session end") {
+                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+                window.location.href="index.html"
+            } else {
+                alert(message);
+            }
         }
 
         let eventBus = new Vue();
@@ -133,7 +149,7 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        sessionEnd(err.response.data.message);
+                        exceptionHandler(err);
                     })
                 },
             },
@@ -145,31 +161,35 @@
                 star: null,
                 taste: null,
                 info: null,
-                userId: null
+                userId: null,
+                foodId: null
             },
             created() {
                 eventBus.$on("user", userId => {
                     this.userId = userId;
                 })
+                this.foodId = parseInt(localStorage.getItem("foodId"));
+                localStorage.removeItem("foodId");
             },
             methods: {
                 submitReview: function() {
                     axios({
-                        method: "post",
+                        method: "put",
                         url: "/addPost",
                         params: {
                             userId: this.userId,
-                            foodId: 1,
+                            foodId: this.foodId,
                             star: this.star,
                             taste: this.taste,
                             info: this.info
                         }
+                    }).then(res => {
+                        alert(res.data);
+                        window.location.href = "foodList.html";
                     })
   
                 }
             }
-
-
         });
 
     </script>

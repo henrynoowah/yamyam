@@ -3,11 +3,9 @@ package kr.pe.project.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.pe.project.annotation.NoSessionCheck;
 import kr.pe.project.dao.PetUserRepository;
@@ -28,7 +26,7 @@ public class PetUserController {
 	@PostMapping("checkSession")
 	public void checkSession() throws Exception {}
 	
-	
+	@NoSessionCheck
 	@PostMapping("login")
 	public PetUser login(PetUserDTO.Login login, HttpSession session) throws Exception {
 //		session.invalidate();
@@ -75,14 +73,14 @@ public class PetUserController {
 	}
 
 	@PostMapping("editPetUser")
-	public void editPetUser(PetUserDTO.Register petUser) throws Exception {
+	public String editPetUser(PetUserDTO.Register petUser) throws Exception {
 		
 		if (petUser.getAnimalType().equals("") || petUser.getName().equals("") || petUser.getBreed().equals("") || petUser.getWeight().equals("")) {
 			throw new Exception("작성하지 않은 항목이 존재합니다.");
 		} else {
 			dao.save(petUser.toEntity());
 		}
-	
+		return "수정완료";
 	}
 //	@ExceptionHandler
 //	public String PetUserException(Exception e) {

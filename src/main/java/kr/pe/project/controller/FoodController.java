@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.project.dao.AnimalInfoRepository;
@@ -156,8 +157,8 @@ public class FoodController {
 	}
 	
 	//add animalInfo - 미테스트 개그튼그
-	@GetMapping("addAnimalInfo")
-	public AnimalInfo addAnimalInfo(AnimalInfoDTO.Add info, long foodId) throws Exception {
+	@PutMapping("addAnimalInfo")
+	public String addAnimalInfo(AnimalInfoDTO.Add info, long foodId) throws Exception {
 		AnimalInfo animalInfo = new AnimalInfo();
 		try {
 			animalInfo = animalInfoDao.save(info.toEntity());
@@ -172,7 +173,7 @@ public class FoodController {
 			throw new Exception("작성하지 않은 항목이 있습니다.");
 		}
 		
-		return info.toEntity();
+		return "동물 음식정보 추가 성공!";
 	}	
 
 	@GetMapping("getAnimalInfo")

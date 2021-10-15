@@ -2,8 +2,8 @@ package kr.pe.project.aop;
 
 import javax.servlet.http.HttpSession;
 
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,7 +24,7 @@ public class SecurityAspect {
 	
 	// Custom Annotation 을 만들고 특정 annotation 이 있는 메소드는 pointcunt에서 제외!
 	
-	@After("execution(public * kr.pe.project.controller.*.*(..))"
+	@Before("execution(public * kr.pe.project.controller.*.*(..))"
 			+ "&& !@annotation(kr.pe.project.annotation.NoSessionCheck))")
 //	@After("within(kr.pe.project.controller.*)")
 	private String sessionCheck() throws Exception {

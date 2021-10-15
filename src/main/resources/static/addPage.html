@@ -96,7 +96,7 @@
             }).then(res => {
                 console.log(res);
             }).catch(err => {
-                sessionEnd(err);
+                exceptionHandler(err);
             })
         };
 
@@ -154,7 +154,12 @@
             el: "#AddPageContainer",
             data: {
                 name: null,
-                category: null
+                category: null,
+                user: null
+            },
+            created() {
+                this.user = JSON.parse(sessionStorage.getItem("user"));
+                this.$root.$emit("user", this.user); 
             },
             methods: {
                 addFood() {

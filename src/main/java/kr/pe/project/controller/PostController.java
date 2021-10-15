@@ -3,7 +3,7 @@ package kr.pe.project.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.project.dao.FoodRepository;
@@ -30,8 +30,8 @@ public class PostController {
 	private FoodRepository foodDao;
 	
 	//addPost
-	@PostMapping("addPost")
-	public Post addPost(PostDTO.Write post, String userId, long foodId) throws Exception {
+	@PutMapping("addPost")
+	public String addPost(PostDTO.Write post, String userId, long foodId) throws Exception {
 		PetUser user = userDao.findById(userId).get();
 		post.setUser(user);
 		
@@ -45,7 +45,7 @@ public class PostController {
 			throw new Exception("작성되지 않은 항목이 있습니다.");
 		}
 		
-		return pst;
+		return "리뷰 작성 완료!";
 	}
 	
 	//editPost
