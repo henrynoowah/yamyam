@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import kr.pe.project.annotation.NoSessionCheck;
 import kr.pe.project.dao.PetUserRepository;
 import kr.pe.project.model.domain.PetUser;
 import kr.pe.project.model.domain.dto.PetUserDTO;
@@ -24,8 +25,8 @@ public class PetUserController {
 	@Autowired
 	private PetUserRepository dao;
 	
-	@GetMapping("checkSession")
-	public void checkSession() {}
+	@PostMapping("checkSession")
+	public void checkSession() throws Exception {}
 	
 	
 	@PostMapping("login")
@@ -52,12 +53,14 @@ public class PetUserController {
 		return user;
 	}
 	
+	@NoSessionCheck
 	@GetMapping("logout")
 	public String logout(HttpSession session) throws Exception {
 		session.invalidate();
 		return "index.html";
 	}
 	
+	@NoSessionCheck
 	@PostMapping("register")
 	public String register(PetUserDTO.Register register) throws Exception {
 		PetUser user = null;
@@ -70,7 +73,7 @@ public class PetUserController {
 		}
 		return "회원가입 성공!";
 	}
-	
+
 	@PostMapping("editPetUser")
 	public void editPetUser(PetUserDTO.Register petUser) throws Exception {
 		

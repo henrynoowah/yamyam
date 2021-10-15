@@ -35,7 +35,7 @@ public class FoodController {
 	// 일반회원 + 관리자용 메소드
 	// 전체 조회
 	@GetMapping("foodListAll")
-	public Iterable<Food> foodListAll() {
+	public Iterable<Food> foodListAll() throws Exception {
 		Iterable<Food> foodListAll = foodDao.findAll();
 		System.out.println(foodListAll);
 		
@@ -149,7 +149,7 @@ public class FoodController {
 
 	//delete food
 	@GetMapping("deleteFood")
-	public String deleteFodd(long foodId) {
+	public String deleteFood(long foodId) {
 		foodDao.deleteById(foodId);
 		
 		return "삭제 완료";
@@ -176,14 +176,14 @@ public class FoodController {
 	}	
 
 	@GetMapping("getAnimalInfo")
-	public AnimalInfo getAnimalInfo(Long id) {
+	public AnimalInfo getAnimalInfo(Long id) throws Exception {
 		AnimalInfo info = animalInfoDao.findById(id).get();
 		return info;
 	}
 	
 	
 	@GetMapping("getFoodInfoAll")
-	public Iterable<FoodInfo> getFoodInfoAll() {
+	public Iterable<FoodInfo> getFoodInfoAll() throws Exception {
 		
 		Iterable<FoodInfo> foodInfoAll = foodInfoDao.findAll();
 		

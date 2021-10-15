@@ -88,8 +88,26 @@
     </template>
 
     <script>
-        const sessionEnd = (err) => {
-            alert(err);
+
+        window.onload = () => {
+            axios({
+                method: "post",
+                url: "/checkSession"
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+                sessionEnd(err);
+            })
+        };
+
+        exceptionHandler = (err) => {
+            let message = err.response.data.message;
+            if(message === "session end") {
+                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+                window.location.href="index.html"
+            } else {
+                alert(message);
+            }
         }
         
         Vue.component("header-nav", {
@@ -126,7 +144,7 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        sessionEnd(err.response.data.message);
+                        exceptionHandler(err);;
                     })
                 },
             },
@@ -150,8 +168,7 @@
                     }).then(res => {
                         alert(res.data);
                     }).catch(err => {
-                    	sessionEnd(err.response.data.message);
-                        // alert(err.respose.data.message);
+                    	exceptionHandler(err);
                     })
                 }
             }

@@ -189,6 +189,16 @@
             sessionStorage.removeItem("user");
         };
 
+        // exceptionHandler = (err) => {
+        //     let message = err.response.data.message;
+        //     if(message === "session end") {
+        //         alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+        //         window.location.href="index.html"
+        //     } else {
+        //         alert(message);
+        //     }
+        // }
+
         let eventBus = new Vue();
 
         Vue.component("login", {
@@ -238,6 +248,8 @@
             created() {
                 axios.get("/getAnimalType").then(res => {
                     this.animals = res.data;
+                }).catch(err => {
+                    console.log(err.response);
                 })
             },
             methods: {
