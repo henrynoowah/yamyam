@@ -68,30 +68,34 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            background: none;
+            backface-visibility: hidden;
+            transition: 1s ease;
         }
 
-        .cardContent .btn {
+        .cardContent .btn { 
             display: flex;
             justify-content: center;
         }
-        
+
         .front {
             transform: rotateY(0deg);
+            transform: translateZ(1px);
         }
 
         /* 돌아가있기 떄문에 다시 돌려야 함 */
         .back {
-            transform: rotateY(180deg) translateZ(-1px);
-            display: none;
+            transform: rotateY(180deg);
+            opacity: 0;
         }
         
         .cardBackShow {
-            display: block;
+            opacity: 100;
         }
 
         .animalInfoBtn {
-            backface-visibility: hidden;
             background-color: rgb(255, 255, 255);
+            backface-visibility: hidden;
             width: 40%;
             margin-top: 5px;
             padding-top: 2px;
@@ -247,20 +251,26 @@
     <script>
 
         window.onload = () => {
-            axios.get("/checkSession").then(res => {
-                console.log(res.data);
-               if(res.data.length() === 0) {
-                   alert(res.data);
-                   window.localation.href = "index.html"
-               }
+            axios({
+                method: "post",
+                url: "/checkSession"
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+                exceptionHandler(err);
             })
         };
 
-        const sessionEnd = (err) => {
-            alert(err);
-            // window.location.href = "index.html"
+        exceptionHandler = (err) => {
+            let message = err.response.data.message;
+            if(message === "session end") {
+                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+                window.location.href="index.html"
+            } else {
+                alert(message);
+            }
         }
-
+        
         let eventBus = new Vue();
         
         Vue.component("header-nav", {
@@ -297,7 +307,7 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        sessionEnd(err.response.data.message);;
+                        exceptionHandler(err);
                     })
                 },
             },
@@ -333,25 +343,25 @@
                 animalInfo: null,
                 user: null
             },
-            created() {         
-                axios.get("/foodListAll").then(res => {
+            async created() {         
+                await axios.get("/foodListAll").then(res => {
                     this.foodList = res.data;
                     this.foodList.forEach(v => {
                         this.flip.push(true);
                     })
                 }).catch(err => {
-                    sessionEnd(err.response.data.message);
+                    exceptionHandler(err);
                 });
-                axios.get("/getAnimalType").then(res => {
+                await axios.get("/getAnimalType").then(res => {
                     this.animals = res.data;
                 }).catch(err => {
-                    sessionEnd(err.response.data.message);
+                    exceptionHandler(err);
                 });
-                axios.get("/getFoodInfoAll").then(res => {
+                await axios.get("/getFoodInfoAll").then(res => {
                     console.log(res.data);
                     this.foodInfo = res.data;
                 }).catch(err => {
-                    sessionEnd(err.response.data.message);
+                    exceptionHandler(err);
                 });
             },
             methods: {
@@ -372,7 +382,7 @@
                             check = v.animalInfo.eatable;
                         }
                     })
-                    result = (check === 1) ? "💚" : "❌";
+                    result = check === 1 ? "💚" : (check === 0 ? "❌" : "🟡");
 
                     return result;
                 },
@@ -395,7 +405,7 @@
                             this.animalInfo = res.data;
                             this.infoShow = !this.infoShow;
                         }).catch(err => {
-                            sessionEnd(err.response.data.message);
+                            exceptionHandler(err);
                         })
                     }
                 },
