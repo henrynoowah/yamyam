@@ -25,7 +25,7 @@ import lombok.Setter;
 public class FoodInfo {
 	
 	@Id
-	@Column(name = "animal_idx")
+	@Column(name = "foodinfo_idx")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	

@@ -7,10 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity(name = "animal_info")
 public class AnimalInfo {
 	
@@ -38,10 +41,10 @@ public class AnimalInfo {
 	
 	@Column(name = "info", nullable = false)
 	private String info;
-	
+
 	@JsonIgnoreProperties({"animalInfo"})
 	@OneToOne(fetch=FetchType.LAZY, mappedBy = "animalInfo")
 	private FoodInfo animal;
 	
-	
 }
+

@@ -173,7 +173,7 @@
             flex-direction: column;
             justify-content: center; 
         }
-
+      
     </style>
 
 </head>
@@ -371,7 +371,6 @@
                 eatable(foodId, animalId) {
                     let check = "";
                     let result = "";
-
                     this.foodInfo.forEach(v => {
                         if(v.food.id === foodId && v.animalInfo.animalType === animalId) {
                             check = v.animalInfo.eatable;
