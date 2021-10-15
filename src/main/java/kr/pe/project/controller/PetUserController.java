@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.pe.project.dao.PetUserRepository;
 import kr.pe.project.model.domain.PetUser;
 import kr.pe.project.model.domain.dto.PetUserDTO;
-import net.bytebuddy.implementation.bytecode.Throw;
 
 @RestController
+//@SessionAttributes({"user"})
 public class PetUserController {
 	
 	PetUserController(){
@@ -23,6 +23,10 @@ public class PetUserController {
 	
 	@Autowired
 	private PetUserRepository dao;
+	
+	@GetMapping("checkSession")
+	public void checkSession() {}
+	
 	
 	@PostMapping("login")
 	public PetUser login(PetUserDTO.Login login, HttpSession session) throws Exception {
@@ -62,16 +66,16 @@ public class PetUserController {
 		if(user != null) {
 			throw new Exception("이미 존재하는 아이디입니다");
 		} else {
-			dao.save(register.toEntity());
-			
+			dao.save(register.toEntity());		
 		}
 		return "회원가입 성공!";
 	}
 	
 //	@ExceptionHandler
-//	public void PetUserException(Exception e) throws Exception {
+//	public String PetUserException(Exception e) {
 //		System.err.println(e.getMessage());
-//		throw new Exception(e.getMessage());
+//		
+//		return ".getMessage();
 //	}
 
 }

@@ -42,26 +42,32 @@
 
 <body>
     
-    <div id="AddPageContainer">
+    <div id="AddReviewContainer">
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
         </div>
 
+
+        <!-- 여기서부터 동물별 음식추가 폼 작성 -->
+
         <div id="bodyContainer">
             <div class="addPageContainer">
-                <form @submit.prevent="addFood"  class="addPageForm">
+                <form class="addPageForm">
                     <label for="name" >음식 이름을 적어주세요</label>
-                    <input type="text" v-model:value="name">
+                    <input type="text" value="name">
                     <label for="category">음식 분류를 적어주세요</label>
-                    <input type="text" v-model:value="category">
+                    <input type="text" value="category">
                     <input type="submit" value="등록">
                 </form>
             </div>
-
         </div>
 
+
     </div>
+
+
+
     
     <template id="headerNav">
         <div class="navContents">
@@ -90,7 +96,11 @@
     <script>
         const sessionEnd = (err) => {
             alert(err);
+            window.location.href = "index.html"
+            console.log(err)
         }
+
+        let eventBus = new Vue();
         
         Vue.component("header-nav", {
             template: "#headerNav",
@@ -133,29 +143,7 @@
         });
 
         new Vue({
-            el: "#AddPageContainer",
-            data: {
-                name: null,
-                category: null
-            },
-            methods: {
-                addFood() {
-                    axios({
-                        method: "post",
-                        url: "/addFood",
-                        params: {
-                            name: this.name,
-                            category: this.category
-                        }
-                    }).then(res => {
-                        alert(res.data);
-                    }).catch(err => {
-                    	sessionEnd(err.response.data.message);
-                        // alert(err.respose.data.message);
-                    })
-                }
-            }
-
+            el: "#AddReviewContainer"
         });
 
     </script>

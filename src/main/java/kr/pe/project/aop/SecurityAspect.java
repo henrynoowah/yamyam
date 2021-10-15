@@ -2,10 +2,11 @@ package kr.pe.project.aop;
 
 import javax.servlet.http.HttpSession;
 
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import kr.pe.project.model.domain.dto.PetUserDTO;
 import kr.pe.project.model.domain.dto.PetUserDTO.Session;
@@ -14,18 +15,22 @@ import kr.pe.project.model.domain.dto.PetUserDTO.Session;
 @Aspect
 public class SecurityAspect {
 
-	@Autowired
-	private HttpSession session;
+//	execution(* step02.aop.biz.Car.buy*(..))
+	@After("execution( * kr.pe.project.controller.PetUserController.checkSession(..))")
+	private String sessionCheck() throws Exception {
 		
-	@Before("within(kr.pe.project.controller.FoodController)")
-	private void sessionCheck() throws Exception {
+		String result = null;
+		
+		HttpSession session = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest().getSession();
 		System.out.println("---------AOP---------");
 		PetUserDTO.Session user = (Session) session.getAttribute("user");
 		System.out.println(user);
 		System.out.println("---------AOP---------");
 		if(user == null) {
-			throw new Exception("로그아웃되었습니다 다시 로그인해주세요");
-		}
+			result = "session ended";
+		};
+		
+		return result;
 	};
 	
 }

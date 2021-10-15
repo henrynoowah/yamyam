@@ -245,10 +245,20 @@
     </template>
 
     <script>
+
+        window.onload = () => {
+            axios.get("/checkSession").then(res => {
+                console.log(res.data);
+               if(res.data.length() === 0) {
+                   alert(res.data);
+                   window.localation.href = "index.html"
+               }
+            })
+        };
+
         const sessionEnd = (err) => {
             alert(err);
-            window.location.href = "index.html"
-            console.log(err)
+            // window.location.href = "index.html"
         }
 
         let eventBus = new Vue();
@@ -287,7 +297,7 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        alert(err.response.data);
+                        sessionEnd(err.response.data.message);;
                     })
                 },
             },
@@ -330,18 +340,18 @@
                         this.flip.push(true);
                     })
                 }).catch(err => {
-                    sessionEnd(err);
+                    sessionEnd(err.response.data.message);
                 });
                 axios.get("/getAnimalType").then(res => {
                     this.animals = res.data;
                 }).catch(err => {
-                    sessionEnd(err);
+                    sessionEnd(err.response.data.message);
                 });
                 axios.get("/getFoodInfoAll").then(res => {
                     console.log(res.data);
                     this.foodInfo = res.data;
                 }).catch(err => {
-                    sessionEnd(err);
+                    sessionEnd(err.response.data.message);
                 });
             },
             methods: {

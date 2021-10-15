@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.project.dao.AnimalInfoRepository;
@@ -105,9 +106,10 @@ public class FoodController {
 //	/* administrator */
 //	
 	//add food
-	@GetMapping("addFood")
+	@PostMapping("addFood")
 	public String addFood(FoodDTO.Add food) throws Exception { 
 		Food findFood = foodDao.findFoodByName(food.getName());
+		System.out.println(food);
 		
 		if (findFood != null) {
 			throw new Exception("이미 존재하는 음식입니다.");
@@ -118,7 +120,6 @@ public class FoodController {
 				throw new Exception("작성되지 않은 항목이 있습니다.");
 			}
 		}
-		
 		return "추가 완료";
 	}
 	
