@@ -52,5 +52,4 @@ public class PetUserDTO {
 		private String id;
 		private Integer admin;
 	}
-	
 }

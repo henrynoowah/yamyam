@@ -131,11 +131,11 @@ public class FoodController {
 		String name = food.getName();
 		String category = food.getCategory();
 		
-		if (name != null && category != null) {
-			editFood.setName(name);
-			editFood.setCategory(category);
+		if (name.equals("") || category.equals("")) {
+			throw new Exception("작성되지 않은 항목이 있습니다.");
 			} else {
-				throw new Exception("작성되지 않은 항목이 있습니다.");
+				editFood.setName(name);
+				editFood.setCategory(category);
 			}
 		
 		editFood.setCategory(food.getCategory());
