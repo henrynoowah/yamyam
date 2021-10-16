@@ -21,28 +21,13 @@
             width: 100%;
         }
 
-        .addPageContainer {
-            width: 50%;
-            height: 50%;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: rgb(255, 255, 255);
-            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
-        }
-
-        .addPageForm {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
-
     </style>
 
 </head>
 
 <body>
     
-    <div id="AddReviewContainer">
+    <div id="pageContainer">
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
@@ -51,13 +36,19 @@
 
         <!-- 여기서부터 리뷰 페이지 작성 -->
         <div id="bodyContainer">
-            <div class="addPageContainer">
+            <div class="pageContainer">
                 <form @submit.prevent="submitReview" class="addPageForm">
                     <label for="star" >별점을 적어주세요</label>
-                    <input type="text" v-model:value="star">
-                    <label for="taste">맛을 적어주세요</label>
+                    <select name="type" v-model:value="star">
+                        <option :value="1">⭐</option>
+                        <option :value="2">⭐⭐</option>
+                        <option :value="3">⭐⭐⭐</option>
+                        <option :value="4">⭐⭐⭐⭐</option>
+                        <option :value="5">⭐⭐⭐⭐⭐</option>
+                    </select>
+                    <label for="taste">입맛에 맞았나요?</label>
                     <input type="text" v-model:value="taste">
-                    <label for="info">상세한 설명을 적어주세요</label>
+                    <label for="info">상세한 후기 적어주세요</label>
                     <input type="text" v-model:value="info">
                     <input type="submit" value="등록">
                 </form>
@@ -155,7 +146,7 @@
         });
 
         new Vue({
-            el: "#AddReviewContainer",
+            el: "#pageContainer",
             data: {
                 star: null,
                 taste: null,

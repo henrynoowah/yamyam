@@ -29,7 +29,7 @@
     }
 
     .navLinks {
-        width: 40%;
+        width: 30%;
         display: flex;
         align-content: flex-end;
         justify-content: space-between;
@@ -57,4 +57,64 @@
         position: absolute;
         transform: translateX(-20px);
         display: none;
+    }
+
+    /* --------------------------------- form container -------------------------------------- */
+    
+    .pageContainer {
+        margin-top: 80px;
+        width: 50%;
+        height: 50%;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgb(255, 255, 255);
+        filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+        /* display: flex;
+        flex-direction: column;
+        justify-content: center;  */
+    }
+    
+    .addPageForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    #bodyContainer button{
+        background:#FFE2EE;
+        border: none;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .addPageForm input, .addPageForm select {  
+        border: none;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .addPageForm input:not([type="submit"]), .addPageForm select {
+        background-color:#ffffff;
+        box-shadow: 0 0 0 1px #FFE2EE inset;
+    }
+
+    .addPageForm input[type=submit] {
+        background-color:#FFE2EE;
+    }
+
+    .addPageForm input[type=submit]:hover {
+        background-color:#ffffff;
+        box-shadow: 0 0 0 1px #FFE2EE inset;
     }

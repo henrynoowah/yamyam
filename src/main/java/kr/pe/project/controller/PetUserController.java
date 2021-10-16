@@ -3,6 +3,7 @@ package kr.pe.project.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,6 @@ public class PetUserController {
 	@NoSessionCheck
 	@PostMapping("login")
 	public PetUser login(PetUserDTO.Login login, HttpSession session) throws Exception {
-//		session.invalidate();
 		
 		PetUser user = null;
 		user = dao.findPetUserById(login.getId());
@@ -94,5 +94,11 @@ public class PetUserController {
 		
 		return "수정완료";
 	}
-
+	
+	@DeleteMapping("deletePetUser")
+	public String deletePetUser(PetUserDTO.Delete petUser, HttpSession session) {
+		dao.deleteById(petUser.getId());
+		session.invalidate();
+		return "🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾";
+	}
 }

@@ -41,16 +41,6 @@ public class PetUserDTO {
 		private Integer admin;
 		private Integer weight;
 		
-		public PetUser toEntity() {
-			return PetUser.builder().id(id)
-									.pw(pw)
-									.name(name)
-									.animalType(animalType)
-									.breed(breed)
-									.admin(admin)
-									.weight(weight)
-									.build();
-		}
 	}
 	
 	@Data
@@ -74,5 +64,12 @@ public class PetUserDTO {
 	public static class Session {
 		private String id;
 		private Integer admin;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class Delete {
+		private String id;
 	}
 }

@@ -69,7 +69,6 @@
             flex-direction: column;
             justify-content: center;
             background: none;
-            backface-visibility: hidden;
             transition: 1s ease;
         }
 
@@ -95,7 +94,6 @@
 
         .animalInfoBtn {
             background-color: rgb(255, 255, 255);
-            backface-visibility: hidden;
             width: 40%;
             margin-top: 5px;
             padding-top: 2px;
@@ -126,22 +124,22 @@
             justify-content: space-evenly;
         }
 
-        .infoContentCotainer {
+        .infoContentContainer {
             width: 50%;
             background-color: #FFE2EE;
             filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
             display: flex;
             flex-direction: column;
             justify-content: center; 
+            border-radius: 10px;
             padding: 20px;
-            overflow: hidden;
         }
 
-        .infoContentCotainer li {
+        .infoContentContainer li {
             list-style: none;
         }
 
-        .infoContentCotainer button {
+        .infoContentContainer button {
             width: 80%;
             background: rgb(255, 255, 255);;
             text-decoration: none;
@@ -179,11 +177,12 @@
     <div id="foodListContainer">
 
         <div id="header">
-            <header-nav class="headerNav"></header-nav>
+            <!-- <main-header/> -->
+            <header-nav class="headerNav"/>
         </div>
 
         <div id="infoPop" v-if="infoShow">
-            <div class="infoContentCotainer">
+            <div class="infoContentContainer">
                 <info-com :animalinfo="animalInfo" :animaltype="animals"></info-com>
                 <div class="btns">
                     <button v-if="user.admin">수정하기</button>
@@ -219,6 +218,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- <button v-if="user.admin">삭제</div> -->
                     </div>
     
                 </div>
@@ -235,10 +235,6 @@
                 <li>
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
-                </li>
-                <li>
-                    <div class="dog">🐶</div>
-                    <button @click="favorites">Favorites</button>
                 </li>
                 <li v-if="user.admin == 1">
                     <div class="dog">🐶</div>
@@ -275,7 +271,7 @@
                     <div class="review" v-for="post in animalinfo.animal.food.postList" >
                         ID: {{post.user.id}} - {{post.user.name}} - {{post.user.breed}}
                         <hr>
-                        {{post.star}} <br>
+                        {{"⭐".repeat(post.star)}} <br>
                         {{post.info}} 
                     </div>        
                 </div>
@@ -284,6 +280,8 @@
     </template>
 
     <script>
+
+        // import MainHeader from 'MainHeader.vue'
 
         // 뷰에서 사용할 수 있는 global 변수 선언!
         Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
@@ -306,9 +304,7 @@
                 alert(message);
             }
         }
-        
-        let eventBus = new Vue();
-        
+                
         Vue.component("header-nav", {
             template: "#headerNav",
             data() {
@@ -326,9 +322,6 @@
                 },
                 myPage() {
                     window.location.href="myPage.html"
-                },
-                favorites() {
-                    alert("favorites");
                 },
                 addFood() {
                     window.location.href="addPage.html"

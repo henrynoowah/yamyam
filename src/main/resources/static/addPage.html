@@ -21,35 +21,20 @@
             width: 100%;
         }
 
-        .addPageContainer {
-            width: 50%;
-            height: 50%;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: rgb(255, 255, 255);
-            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
-        }
-
-        .addPageForm {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
-
     </style>
 
 </head>
 
 <body>
     
-    <div id="AddPageContainer">
+    <div id="pageContainer">
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
         </div>
 
         <div id="bodyContainer">
-            <div class="addPageContainer">
+            <div class="pageContainer">
                 <form @submit.prevent="addFood"  class="addPageForm">
                     <label for="name" >음식 이름을 적어주세요</label>
                     <input type="text" v-model:value="name">
@@ -70,10 +55,6 @@
                 <li>
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
-                </li>
-                <li>
-                    <div class="dog">🐶</div>
-                    <button @click="favorites">Favorites</button>
                 </li>
                 <li v-if="user.admin == 1">
                     <div class="dog">🐶</div>
@@ -127,10 +108,7 @@
                     a.removeItem("🐶");
                 },
                 myPage() {
-                    alert("myPage");
-                },
-                favorites() {
-                    alert("favorites");
+                    window.location.href="myPage.html"
                 },
                 addFood() {
                     window.location.href="addPage.html"
@@ -144,14 +122,14 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        exceptionHandler(err);;
+                        exceptionHandler(err);
                     })
                 },
             },
         });
 
         new Vue({
-            el: "#AddPageContainer",
+            el: "#pageContainer",
             data: {
                 name: null,
                 category: null,

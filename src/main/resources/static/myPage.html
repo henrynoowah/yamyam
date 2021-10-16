@@ -21,21 +21,6 @@
             width: 100%;
         }
 
-        .addPageContainer {
-            width: 50%;
-            height: 50%;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: rgb(255, 255, 255);
-            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
-        }
-
-        .addPageForm {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
-
     </style>
 
 </head>
@@ -50,7 +35,7 @@
 
         <!-- 여기서부터 리뷰 페이지 작성 -->
         <div id="bodyContainer">
-            <div class="addPageContainer">
+            <div class="pageContainer">
                 <form @submit.prevent="submitUserInfo" class="addPageForm">
                     <label for="id" >아이디</label>
                     <span type="text">{{id}}</span>
@@ -75,7 +60,7 @@
 
                     <input type="submit" value="수정">
                 </form>
-                <button>탈퇴</button>
+                <button @click="deleteUser">회원탈퇴</button>
             </div>
         </div>
 
@@ -88,10 +73,6 @@
                 <li>
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
-                </li>
-                <li>
-                    <div class="dog">🐶</div>
-                    <button @click="favorites">Favorites</button>
                 </li>
                 <li v-if="user.admin == 1">
                     <div class="dog">🐶</div>
@@ -127,8 +108,6 @@
                 alert(message);
             }
         }
-
-        let eventBus = new Vue();
         
         Vue.component("header-nav", {
             template: "#headerNav",
@@ -139,7 +118,6 @@
             },
             created() {
                 this.user = this.$user;
-                eventBus.$emit("user", this.user);
             },
             methods: {
                 hover2(a) {
@@ -147,10 +125,7 @@
                     a.removeItem("🐶");
                 },
                 myPage() {
-                    alert("myPage");
-                },
-                favorites() {
-                    alert("favorites");
+                    window.location.href="myPage.html"
                 },
                 addFood() {
                     window.location.href="addPage.html"
@@ -213,6 +188,20 @@
                         }
                     }).then(res => {
                         alert(res.data);
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                },
+                deleteUser() {
+                    axios({
+                        method: "delete",
+                        url: "/deletePetUser",
+                        params: {
+                            id: this.id
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                        window.location.href = "index.html";
                     }).catch(err => {
                         exceptionHandler(err);
                     })

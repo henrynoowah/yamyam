@@ -42,7 +42,7 @@
 
 <body>
     
-    <div id="AddAnimalInfoContainer">
+    <div id="pageContainer">
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
@@ -54,9 +54,9 @@
         <!-- 여기서부터 동물별 음식추가 폼 작성 -->
 
         <div id="bodyContainer">
-            <div class="addPageContainer">
+            <div class="pageContainer">
                 <form @submit.prevent="addAnimlInfo" class="addPageForm">
-                    <label for="amount" >적절량</label>
+                    <label for="amount" >적정량</label>
                     <input type="text" v-model:value="amount">
                     <label for="eatable">먹어도 되나요?</label>
                     <select name="type" v-model:value="eatable">
@@ -100,6 +100,8 @@
 
     <script>
 
+        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+
         window.onload = () => {
             axios({
                 method: "post",
@@ -118,8 +120,6 @@
                 alert(message);
             }
         }
-
-        let eventBus = new Vue();
         
         Vue.component("header-nav", {
             template: "#headerNav",
@@ -154,14 +154,14 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        exceptionHandler(err);
+                        exceptionHandler(err);;
                     })
                 },
             },
         });
 
         new Vue({
-            el: "#AddAnimalInfoContainer",
+            el: "#pageContainer",
             data: {
                 //AnimalInfo 추가에 필요한 데이터
                 amount: null,
@@ -198,7 +198,6 @@
                     })
                 }
             }
-
         });
 
     </script>

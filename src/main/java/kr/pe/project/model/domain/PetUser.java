@@ -2,6 +2,7 @@ package kr.pe.project.model.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,7 +53,7 @@ public class PetUser {
 	private Integer weight;
 	
 //	@JsonIgnore
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
+	@OneToMany(cascade = CascadeType.REMOVE ,fetch=FetchType.LAZY, mappedBy="user")
 	private List<Post> postList;
 
 }
