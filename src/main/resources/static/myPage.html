@@ -52,19 +52,22 @@
         <div id="bodyContainer">
             <div class="addPageContainer">
                 <form @submit.prevent="submitUserInfo" class="addPageForm">
-                    <label for="id" >ID</label>
+                    <label for="id" >아이디</label>
                     <span type="text">{{id}}</span>
 
-                    <label for="name">Name</label>
-                    <input type="text" v-model:value="name">
+                    <label for="name">비밀번호 변경</label>
+                    <input type="password" v-model:value="pw">
 
-                    <label for="Breed">Animal Type</label>
+                    <label for="name">이름</label>
+                    <input type="text" v-model.lazy:value="name">
+
+                    <label for="Breed">{{name}}은 어떤 동물인가요?</label>
                     <select name="type" v-model:value="animalType" >
                         <option :value="null" hidden="" disabled="disabled" selected="selected">{{defaultType}}</option>
                         <option :value="animal.id" v-for="animal in animals">{{animal.name}}</option>
                     </select>
 
-                    <label for="breed" >Breed</label>
+                    <label for="breed" >{{name}}의 종을 입력해주세요</label>
                     <input type="text" v-model:value="breed">
 
                     <label for="weight" >Weight (Kg)</label>
@@ -72,6 +75,7 @@
 
                     <input type="submit" value="수정">
                 </form>
+                <button>탈퇴</button>
             </div>
         </div>
 
@@ -174,25 +178,24 @@
                 animals: [],
                 breed: null,
                 id: null,
-                pw: null,
+                pw: "",
                 name: null,
                 weight: null,
                 admin: null,
             },
             created() {
-                eventBus.$on("user", user => {
-                    axios.get("/getAnimalType").then(res => {
+                this.id = this.$user.id;
+                this.name = this.$user.name;
+                this.weight = this.$user.weight;
+                this.breed = this.$user.breed
+                this.animalType = this.$user.animalType;
+                this.admin =this.$user.admin
+
+                axios.get("/getAnimalType").then(res => {
                     this.animals = res.data;
                     this.defaultType = res.data[user.animalType-1].name;
-                    this.animalType = user.animalType
-                    })
-                    this.breed = user.breed;
-                    this.id = user.id;
-                    this.pw = user.pw;
-                    this.name = user.name;
-                    this.weight = user.weight;
-                    this.admin = user.admin
                 })
+                this.defaultType = this.animals.filter( v => v.id == this.animalType);
             },
             methods: {
                 submitUserInfo: function() {

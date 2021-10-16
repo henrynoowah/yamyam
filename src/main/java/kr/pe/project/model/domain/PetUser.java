@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +35,7 @@ public class PetUser {
 	@Column(name = "name", nullable = false)
 	private String name;
 	
+	@JsonIgnore
 	@Column(name = "pw", nullable = false)
 	private String pw;
 	
@@ -48,6 +51,7 @@ public class PetUser {
 	@Column(name = "weight", nullable = false)
 	private Integer weight;
 	
+//	@JsonIgnore
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	private List<Post> postList;
 

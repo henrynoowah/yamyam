@@ -17,8 +17,7 @@ public class AnimalInfoDTO {
 		private String amount;
 		
 		public AnimalInfo toEntity() {
-			return AnimalInfo.builder()
-									   .eatable(eatable)
+			return AnimalInfo.builder().eatable(eatable)
 									   .animalType(animalType)
 									   .info(info)
 									   .amount(amount)

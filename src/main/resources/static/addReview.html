@@ -164,9 +164,7 @@
                 foodId: null
             },
             created() {
-                eventBus.$on("user", userId => {
-                    this.userId = userId;
-                })
+                this.userId = this.$user.id
                 this.foodId = parseInt(localStorage.getItem("foodId"));
                 localStorage.removeItem("foodId");
             },

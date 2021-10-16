@@ -113,31 +113,60 @@
 
         #infoPop {
             position: fixed;
-            height: 50%;
-            width: 50%;
-            margin: auto;
-            background-color: #FFE2EE;
-            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
-            transform: translateY(-200px);
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            justify-content: center;
+            transform: translateY(200px);
+            z-index: 1;
         }
 
-        .infoContent .li {
-            list-style: none;
+        #infoPop .btns {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .infoContentCotainer {
+            width: 50%;
+            background-color: #FFE2EE;
+            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
             display: flex;
             flex-direction: column;
             justify-content: center; 
+            padding: 20px;
+            overflow: hidden;
         }
 
-        #reviewContainer {
+        .infoContentCotainer li {
+            list-style: none;
+        }
+
+        .infoContentCotainer button {
             width: 80%;
-            height: 100px;
-            margin: auto;
+            background: rgb(255, 255, 255);;
+            text-decoration: none;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: ease-in 0.3s;
+        }
+
+
+        #reviewContainer {
+            height: 20vh;
+            margin: 5px;
             overflow: scroll;
             background-color: rgb(255, 255, 255);
+            border-radius: 10px;
         }
 
         .review {
+            border: 1px solid #FFE2EE;
+            border-radius: 5px;
             margin-bottom: 10px;
+            margin: 10px;
             padding: 5px;
         }
       
@@ -151,6 +180,17 @@
 
         <div id="header">
             <header-nav class="headerNav"></header-nav>
+        </div>
+
+        <div id="infoPop" v-if="infoShow">
+            <div class="infoContentCotainer">
+                <info-com :animalinfo="animalInfo" :animaltype="animals"></info-com>
+                <div class="btns">
+                    <button v-if="user.admin">수정하기</button>
+                    <button @click="addReview(animalInfo.animal.food.id)">리뷰달기</button>
+                    <button @click="infoShowToggle">닫기</button>
+                </div>
+            </div>
         </div>
 
         <div id="bodyContainer">
@@ -181,11 +221,6 @@
                         </div>
                     </div>
     
-                </div>
-                <div id="infoPop" v-if="infoShow">
-                    <info-com class="infoContent" :animalinfo="animalInfo" :animaltype="animals"></info-com>
-                    <button @click="addReview(animalInfo.animal.food.id)">리뷰달기</button>
-                    <button @click="infoShowToggle">닫기</button>
                 </div>
             </div>
 
@@ -221,8 +256,8 @@
         <div>
             <div>
                 {{animalinfo.animal.food.name}}
+                <hr>
             </div>
-            <hr>
             <div>
                 <ul>
                     <li>
@@ -235,6 +270,7 @@
                         {{animalinfo.info}}
                     </li>
                 </ul>
+                리뷰 댓글:
                 <div id="reviewContainer">
                     <div class="review" v-for="post in animalinfo.animal.food.postList" >
                         ID: {{post.user.id}} - {{post.user.name}} - {{post.user.breed}}
@@ -244,7 +280,6 @@
                     </div>        
                 </div>
             </div>
-            <button v-if="admin">수정하기</button>
         </div>
     </template>
 
@@ -316,14 +351,6 @@
         Vue.component("info-com", {
             template: "#infoPage",
             props: ["animalinfo"],
-            data(){
-                return {
-                    admin: null
-                }
-            },
-            created() {
-                this.user = this.$user.admin;
-            },
             methods: {
                 eatableInfo(boolean) {
                     return boolean? true : false;

@@ -32,6 +32,29 @@ public class PetUserDTO {
 	
 	@Data
 	@AllArgsConstructor
+	public static class Edit {
+		private String id;
+		private String pw;
+		private String name;
+		private Integer animalType;
+		private String breed;
+		private Integer admin;
+		private Integer weight;
+		
+		public PetUser toEntity() {
+			return PetUser.builder().id(id)
+									.pw(pw)
+									.name(name)
+									.animalType(animalType)
+									.breed(breed)
+									.admin(admin)
+									.weight(weight)
+									.build();
+		}
+	}
+	
+	@Data
+	@AllArgsConstructor
 	public static class Login {
 		private String id;
 		private String pw;

@@ -37,7 +37,6 @@
     
     .navLinks li {
         list-style: none;
-        transition: 1s ease-in;
     }
 
     .navLinks li button {
@@ -47,6 +46,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        transition: 1s ease-in;
     }
 
     .navLinks li:hover .dog {

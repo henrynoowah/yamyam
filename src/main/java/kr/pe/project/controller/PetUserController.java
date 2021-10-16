@@ -47,7 +47,6 @@ public class PetUserController {
 		} else {
 			throw new Exception("아이디가 존재하지 않습니다");
 		}
-		
 		return user;
 	}
 	
@@ -73,20 +72,27 @@ public class PetUserController {
 	}
 
 	@PostMapping("editPetUser")
-	public String editPetUser(PetUserDTO.Register petUser) throws Exception {
+	public String editPetUser(PetUserDTO.Edit petUser) throws Exception {
+		PetUser user = dao.findById(petUser.getId()).get();
 		
-		if (petUser.getAnimalType().equals("") || petUser.getName().equals("") || petUser.getBreed().equals("") || petUser.getWeight().equals("")) {
+		if (petUser.getAnimalType().equals("") 
+				|| petUser.getName().equals("") 
+				|| petUser.getWeight().equals("")) {
 			throw new Exception("작성하지 않은 항목이 존재합니다.");
-		} else {
-			dao.save(petUser.toEntity());
 		}
+		
+		user.setAnimalType(petUser.getAnimalType());
+		user.setName(petUser.getName());
+		user.setWeight(petUser.getWeight());
+		
+		if(petUser.getPw().equals(user.getPw())) {
+			throw new Exception("이전 비밀번호와 일치합니다");
+		} else if (petUser.getPw() != "") {
+			user.setPw(petUser.getPw());
+		}
+		dao.save(user);
+		
 		return "수정완료";
 	}
-//	@ExceptionHandler
-//	public String PetUserException(Exception e) {
-//		System.err.println(e.getMessage());
-//		
-//		return ".getMessage();
-//	}
 
 }

@@ -38,9 +38,8 @@ public class PostController {
 		Food food = foodDao.findById(foodId).get();
 		post.setFood(food);
 		
-		Post pst = new Post();
 		try {
-			pst = postDao.save(post.toEntity());
+			postDao.save(post.toEntity());
 		} catch (Exception e) {
 			throw new Exception("작성되지 않은 항목이 있습니다.");
 		}
