@@ -250,12 +250,13 @@
 
     <script>
 
+        // 뷰에서 사용할 수 있는 global 변수 선언!
+        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+
         window.onload = () => {
             axios({
                 method: "post",
                 url: "/checkSession"
-            }).then(res => {
-                console.log(res);
             }).catch(err => {
                 exceptionHandler(err);
             })
@@ -281,13 +282,9 @@
                 }
             },
             created() {
-                this.getUser()
+                this.user = this.$user;
             },
             methods: {
-                getUser() {
-                    this.user = JSON.parse(sessionStorage.getItem("user"));
-                    eventBus.$emit("user", this.user);
-                },
                 hover2(a) {
                     console.log(a);
                     a.removeItem("🐶");
@@ -325,7 +322,7 @@
                 }
             },
             created() {
-                this.admin = JSON.parse(sessionStorage.getItem("user")).admin;
+                this.user = this.$user.admin;
             },
             methods: {
                 eatableInfo(boolean) {
@@ -346,9 +343,7 @@
                 user: null
             },
             async created() { 
-                eventBus.$on("user", user => {
-                    this.user = user;
-                });
+                this.user = this.$user;
                 await axios.get("/foodListAll").then(res => {
                     this.foodList = res.data;
                     this.foodList.forEach(v => {

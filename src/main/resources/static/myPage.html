@@ -103,12 +103,12 @@
 
     <script>
 
+        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+
         window.onload = () => {
             axios({
                 method: "post",
                 url: "/checkSession"
-            }).then(res => {
-                console.log(res);
             }).catch(err => {
                 exceptionHandler(err);
             })
@@ -134,7 +134,7 @@
                 }
             },
             created() {
-                this.user = JSON.parse(sessionStorage.getItem("user"));
+                this.user = this.$user;
                 eventBus.$emit("user", this.user);
             },
             methods: {

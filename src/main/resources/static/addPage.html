@@ -89,16 +89,17 @@
 
     <script>
 
+        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+
         window.onload = () => {
             axios({
                 method: "post",
                 url: "/checkSession"
-            }).then(res => {
-                console.log(res);
             }).catch(err => {
                 exceptionHandler(err);
             })
         };
+
 
         exceptionHandler = (err) => {
             let message = err.response.data.message;
@@ -118,8 +119,7 @@
                 }
             },
             created() {
-                this.user = JSON.parse(sessionStorage.getItem("user"));
-                // eventBus.$emit("user", this.user);
+                this.user = this.$user;
             },
             methods: {
                 hover2(a) {
@@ -158,8 +158,7 @@
                 user: null
             },
             created() {
-                this.user = JSON.parse(sessionStorage.getItem("user"));
-                this.$root.$emit("user", this.user); 
+                this.user = this.$user;
             },
             methods: {
                 addFood() {
