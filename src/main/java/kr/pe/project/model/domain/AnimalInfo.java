@@ -1,6 +1,5 @@
 package kr.pe.project.model.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,9 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +42,7 @@ public class AnimalInfo {
 	private String info;
 
 	@JsonIgnoreProperties({"animalInfo"})
-	@OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "animalInfo")
+	@OneToOne(fetch=FetchType.LAZY, mappedBy = "animalInfo")
 	private FoodInfo animal;
 	
 }

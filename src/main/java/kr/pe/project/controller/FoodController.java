@@ -164,11 +164,19 @@ public class FoodController {
 		System.out.println(food);
 		Iterable<Post> postAll = postDao.findPostByFood(food);
 		
-		try{
-			postDao.deleteAll(postAll);
-		} catch(Exception e) {
+		Iterable<FoodInfo> foodInfo = foodInfoDao.findFoodInfoByFood(food);
+		
+		foodInfo.forEach(v -> {
+			try {
+				deleteAnimalInfo(v.getAnimalInfo().getId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		});
+
+		postDao.deleteAll(postAll);
+		foodInfoDao.deleteAll(foodInfo);
 			
-		}
 		foodDao.delete(food);
 		
 		return "삭제 완료";
@@ -312,7 +320,23 @@ public class FoodController {
 	
 	
 	
-	
+//	@NoSessionCheck
+//	@DeleteMapping("deleteFood")
+//	public String deleteFood(long foodId) throws Exception {
+//		Food food = foodDao.findById(foodId).get();
+////		kr.pe.project.model.domain.Food@226655b5
+//		System.out.println(food);
+//		Iterable<Post> postAll = postDao.findPostByFood(food);
+//		
+//		try{
+//			postDao.deleteAll(postAll);
+//		} catch(Exception e) {
+//			
+//		}
+//		foodDao.delete(food);
+//		
+//		return "삭제 완료";
+//	}
 	
 	
 	@PutMapping("editAnimalInfo")
@@ -328,9 +352,15 @@ public class FoodController {
 		return "수정성공";
 	}
 	
+	@NoSessionCheck
 	@DeleteMapping("deleteAnimalInfo")
-	public String deleteAnimalInfp(long id) {
-		animalInfoDao.deleteById(id);			
+	public String deleteAnimalInfo(long id) throws Exception {
+		System.out.println("오ㅑ 안지워지냐!!");
+		AnimalInfo animalInfo = animalInfoDao.findById(id).get();
+		FoodInfo foodInfo = foodInfoDao.findFoodInfoByAnimalInfo(animalInfo);
+		foodInfoDao.delete(foodInfo);				
+
+		animalInfoDao.deleteById(animalInfo.getId());
 		
 		return "삭제성공";
 	}

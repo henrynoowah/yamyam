@@ -126,9 +126,10 @@
                         {{"⭐".repeat(post.star)}} <br>
                         {{post.info}} <br>
                         <hr>
-                        <!-- <div v-if="pust.user.id === user.id">
+                        <div class="myPost" v-if="post.user.id === id">
                             <button>삭제</button>
-                        </div> -->
+                            <button>삭제</button>
+                        </div>
                     </div> 
                 </div>
             </div>
@@ -204,6 +205,14 @@
         Vue.component("info-com", {
             template: "#infoPage",
             props: ["animalinfo"],
+            data() {
+                return {
+                    id: null
+                }
+            },
+            created() {
+                this.id = this.$user.id
+            },
             methods: {
                 eatableInfo(boolean) {
                     return boolean? true : false;

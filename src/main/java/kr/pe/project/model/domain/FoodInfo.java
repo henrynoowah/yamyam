@@ -31,11 +31,11 @@ public class FoodInfo {
 	private long id;
 	
 	@JsonIgnoreProperties({"info", "amount"})
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "animal_info")
 	private AnimalInfo animalInfo;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "food")
 	private Food food;
 	
