@@ -50,7 +50,7 @@
                     <input type="text" v-model:value="taste">
                     <label for="info">상세한 후기 적어주세요</label>
                     <input type="text" v-model:value="info">
-                    <input type="submit" value="등록">
+                    <input type="submit" value="수정">
                 </form>
             </div>
         </div>
@@ -102,6 +102,7 @@
 
         let eventBus = new Vue();
         
+        
         Vue.component("header-nav", {
             template: "#headerNav",
             data() {
@@ -145,25 +146,30 @@
         new Vue({
             el: "#pageContainer",
             data: {
-                star: null,
+                star: 0,
                 taste: null,
                 info: null,
                 userId: null,
-                foodId: null
+                postId: null
             },
             created() {
                 this.userId = this.$user.id
-                this.foodId = parseInt(localStorage.getItem("foodId"));
-                localStorage.removeItem("foodId");
+                let post = JSON.parse(localStorage.getItem("post"));
+                this.start = post.star;
+                this.taste = post.taste;
+                this.info = post.info;
+                this.postId = post.id;
+
+                // localStorage.removeItem("post");
             },
             methods: {
                 submitReview() {
                     axios({
                         method: "put",
-                        url: "/addPost",
+                        url: "/editPost",
                         params: {
                             userId: this.userId,
-                            foodId: this.foodId,
+                            postId: this.postId,
                             star: this.star,
                             taste: this.taste,
                             info: this.info
@@ -171,6 +177,8 @@
                     }).then(res => {
                         alert(res.data);
                         window.location.href = "foodList.html";
+                    }).chatch(err => {
+                        exceptionHandler(err);
                     })
   
                 }

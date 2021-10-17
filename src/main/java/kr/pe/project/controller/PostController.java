@@ -1,8 +1,8 @@
 package kr.pe.project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,34 +48,31 @@ public class PostController {
 	}
 	
 	//editPost
-	@GetMapping("editPost")
+	@PutMapping("editPost")
 	public String editPost(PostDTO.Edit post, long postId) throws Exception {
 		Integer star = post.getStar();
 		String info = post.getInfo();
 		String taste = post.getTaste();
 		Post editPost = postDao.findById(postId).get();
-		if (star.equals("") || info.equals("") || taste.equals("")) {
-			throw new Exception("작성되지 않은 항목이 있습니다.");
-			} else {
-				editPost.setStar(post.getStar());
-				editPost.setTaste(post.getInfo());
-				editPost.setInfo(post.getTaste());
-				postDao.save(editPost);
-			}
 		
+		if (star == 0 || info.equals("") || taste.equals("")) {
+			throw new Exception("작성되지 않은 항목이 있습니다.");
+		} else {
+			editPost.setStar(post.getStar());
+			editPost.setTaste(post.getInfo());
+			editPost.setInfo(post.getTaste());
+			postDao.save(editPost);
+		}
+	
 		return "수정완료";
 	}
 	
 	//deletePost
-	@GetMapping("deletePost")
+	@DeleteMapping("deletePost")
 	public String deletePost(long postId) {
 		postDao.deleteById(postId);
 		
 		return "삭제완료";
 	}
 	
-	@ExceptionHandler
-	public String PetUserException(Exception e) {
-		return e.getMessage();
-	}
 }

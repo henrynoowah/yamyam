@@ -8,6 +8,8 @@ import kr.pe.project.model.domain.FoodInfo;
 import kr.pe.project.model.domain.Post;
 
 public interface FoodInfoRepository extends CrudRepository<FoodInfo, Long> {
+	
 	FoodInfo findFoodInfoByAnimalInfo(AnimalInfo animalInfo);
 	Iterable<FoodInfo> findFoodInfoByFood(Food food);
+	
 }

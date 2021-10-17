@@ -127,8 +127,8 @@
                         {{post.info}} <br>
                         <hr>
                         <div class="myPost" v-if="post.user.id === id">
-                            <button>삭제</button>
-                            <button>삭제</button>
+                            <button @click="editPost(post)">수정</button>
+                            <button @click="deletePost(post.id)">삭제</button>
                         </div>
                     </div> 
                 </div>
@@ -216,6 +216,24 @@
             methods: {
                 eatableInfo(boolean) {
                     return boolean? true : false;
+                },
+                editPost(post) {
+                    localStorage.setItem("post", JSON.stringify(post))
+                    window.location.href= "editReview.html"
+                },
+                deletePost(postId) {
+                    axios({
+                        method: "delete",
+                        url: "/deletePost",
+                        params: {
+                            postId: postId
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                        window.location.href="foodList.html"
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
                 }
             }
         });

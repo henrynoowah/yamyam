@@ -53,7 +53,7 @@ public class FoodController {
 	//음식명으로 조회
 	@GetMapping("searchFoodName")
 	public Food searchFoodName(String foodName) {
-		Food food = foodDao.findFoodByName(foodName); //'사과'로 검색한다면 사과뿐만 아니라, '사과'가 들어간 음식 모두 조회하기? ex 사과주
+		Food food = foodDao.findFoodByName(foodName); 
 		
 		if (food != null) {
 			System.out.println(food);			
@@ -78,41 +78,6 @@ public class FoodController {
 		}
 	}
 	
-
-//	@GetMapping("getAnimalInfo")
-//	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
-//		
-//		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
-//		return null;
-//	}
-	
-	
-
-//	@GetMapping("getAnimalInfo")
-//	public List<AnimalInfo> getAnimalInfo(AnimalInfoDTO.Find animal) {
-//		
-//		AnimalInfo get = animalInfoDao.findById(animal.getId()).get();
-//		return null;
-//	}
-
-
-	
-	//동물로 조회
-//	@GetMapping("searchAnimal")
-//	public List searchAnimal(String animalName) throws Exception {
-//		if (animalName.equals("강아지")) {
-//			List<FoodDog> dogList = dogfoodDao.findFoodDogByEatable(1);
-//			return dogList;
-//		} else if (animalName.equals("고양이")) {
-//			List<FoodCat> catList = catfoodDao.findFoodCatByEatable(1);
-//			return catList;
-//		} else {
-//			throw new Exception("해당 동물에 관한 정보가 없습니다");
-//		}
-//	}
-//	
-//	/* administrator */
-//	
 	//add food
 	@PostMapping("addFood")
 	public String addFood(FoodDTO.Add food) throws Exception { 
@@ -156,7 +121,6 @@ public class FoodController {
 	
 
 	//delete food
-	@NoSessionCheck
 	@DeleteMapping("deleteFood")
 	public String deleteFood(long foodId) throws Exception {
 		Food food = foodDao.findById(foodId).get();
@@ -216,128 +180,6 @@ public class FoodController {
 		
 		return foodInfoAll;
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	@NoSessionCheck
-//	@DeleteMapping("deleteFood")
-//	public String deleteFood(long foodId) throws Exception {
-//		Food food = foodDao.findById(foodId).get();
-////		kr.pe.project.model.domain.Food@226655b5
-//		System.out.println(food);
-//		Iterable<Post> postAll = postDao.findPostByFood(food);
-//		
-//		try{
-//			postDao.deleteAll(postAll);
-//		} catch(Exception e) {
-//			
-//		}
-//		foodDao.delete(food);
-//		
-//		return "삭제 완료";
-//	}
-	
 	
 	@PutMapping("editAnimalInfo")
 	public String editAnimalInfo(long animalInfoId, AnimalInfoDTO.Update info) {
@@ -352,7 +194,6 @@ public class FoodController {
 		return "수정성공";
 	}
 	
-	@NoSessionCheck
 	@DeleteMapping("deleteAnimalInfo")
 	public String deleteAnimalInfo(long id) throws Exception {
 		System.out.println("오ㅑ 안지워지냐!!");
