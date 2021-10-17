@@ -12,6 +12,7 @@ import kr.pe.project.annotation.NoSessionCheck;
 import kr.pe.project.dao.PetUserRepository;
 import kr.pe.project.model.domain.PetUser;
 import kr.pe.project.model.domain.dto.PetUserDTO;
+import kr.pe.project.model.domain.dto.PetUserDTO.Session;
 
 @RestController
 //@SessionAttributes({"user"})
@@ -26,6 +27,12 @@ public class PetUserController {
 	
 	@PostMapping("checkSession")
 	public void checkSession() throws Exception {}
+	
+	@GetMapping("checkAdmin")
+	public Integer checkAdmin(HttpSession session) {
+		PetUserDTO.Session user = (Session) session.getAttribute("user");
+		return user.getAdmin();
+	}
 	
 	@NoSessionCheck
 	@PostMapping("login")
