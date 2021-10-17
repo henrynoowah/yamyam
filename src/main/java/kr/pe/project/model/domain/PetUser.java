@@ -46,13 +46,13 @@ public class PetUser {
 	@Column(name = "breed", nullable = false)
 	private String breed;
 	
+	@JsonIgnore
 	@Column(name = "admin", nullable = false)
 	private Integer admin;
 	
 	@Column(name = "weight", nullable = false)
 	private Integer weight;
 	
-//	@JsonIgnore
 	@OneToMany(cascade = CascadeType.REMOVE ,fetch=FetchType.LAZY, mappedBy="user")
 	private List<Post> postList;
 
