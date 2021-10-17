@@ -21,6 +21,21 @@
             width: 100%;
         }
 
+        .addPageContainer {
+            width: 50%;
+            height: 50%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgb(255, 255, 255);
+            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+        }
+
+        .addPageForm {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
     </style>
 
 </head>
@@ -40,7 +55,7 @@
 
         <div id="bodyContainer">
             <div class="pageContainer">
-                <form @submit.prevent="addAnimlInfo" class="addPageForm">
+                <form @submit.prevent="editAnimalInfo" class="addPageForm">
                     <label for="amount" >적정량</label>
                     <input type="text" v-model:value="amount">
                     <label for="eatable">먹어도 되나요?</label>
@@ -55,8 +70,10 @@
             </div>
         </div>
 
+
     </div>
-    
+
+
     <template id="headerNav">
         <div class="navContents">
             <a href="foodList.html"><h3>Yam! Yam!</h3></a>
@@ -65,7 +82,11 @@
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
                 </li>
-                <li v-if="admin">
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="favorites">Favorites</button>
+                </li>
+                <li v-if="user.admin == 1">
                     <div class="dog">🐶</div>
                     <button @click="addFood">Add Food</button>
                 </li>
@@ -104,15 +125,11 @@
             template: "#headerNav",
             data() {
                 return {
-                    user: null,
-                    admin: null
+                    user: null
                 }
             },
             created() {
                 this.user = this.$user;
-                axios.get("/checkAdmin").then(res => {
-                    return this.admin = res.data === 1 ? true : false;
-                })
             },
             methods: {
                 hover2(a) {
@@ -120,7 +137,10 @@
                     a.removeItem("🐶");
                 },
                 myPage() {
-                    window.location.href="myPage.html"
+                    alert("myPage");
+                },
+                favorites() {
+                    alert("favorites");
                 },
                 addFood() {
                     window.location.href="addPage.html"
@@ -134,7 +154,7 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        exceptionHandler(err);
+                        exceptionHandler(err);;
                     })
                 },
             },
@@ -144,34 +164,33 @@
             el: "#pageContainer",
             data: {
                 //AnimalInfo 추가에 필요한 데이터
-                amount: 0,
-                animalType: null,
+                amount: null,
                 eatable: null,
                 info: null,
-                //FoodInfo와 연동할 음식 id
-                foodId: null
+                animalInfoId: null
             },
             created() {
                 const foodInfo = JSON.parse(localStorage.getItem("animalInfo"));
                 console.log(foodInfo)
-                this.foodId = foodInfo.foodId;
-                this.animalType = foodInfo.animalType;
+                this.amount = foodInfo.amount;
+                this.eatable = foodInfo.eatable;
+                this.info = foodInfo.info;
+                this.animalInfoId = foodInfo.animalInfoId;
                 localStorage.removeItem("animalInfo");
             },
             methods: {
-                addAnimlInfo() {
+                editAnimalInfo() {
                     axios({
                         method: "put",
-                        url: "/addAnimalInfo",
+                        url: "/editAnimalInfo",
                         params: {
                             amount: this.amount,
-                            animalType: this.animalType,
                             eatable: this.eatable,
                             info: this.info,
-                            foodId: this.foodId
+                            animalInfoId: this. animalInfoId
                         }
                     }).then(res => {
-                        alert(res.data);
+                        alert("수정완료");
                         window.location.href = "foodList.html";
                     }).catch(err => {
                         exceptionHandler(err);

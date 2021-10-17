@@ -27,7 +27,8 @@
             <div class="infoContentContainer">
                 <info-com :animalinfo="animalInfo" :animaltype="animals"></info-com>
                 <div class="btns">
-                    <button @click="" v-if="admin">수정하기</button>
+
+                    <button v-if="admin" @click="updateAnimalInfo">수정하기</button>
                     <button @click="" v-if="admin">삭제</button>
                     <button @click="addReview(animalInfo.animal.food.id)">리뷰달기</button>
                     <button @click="infoShowToggle">닫기</button>
@@ -292,6 +293,7 @@
                     window.location.href = "addReview.html";
                 },
                 addAnimalInfo(foodId, animalId) {
+                    alert("정보가 없습니다. 추가 페이지로 이동합니다.")
                     let animalInfo = {};
                     animalInfo["foodId"] = foodId
                     animalInfo["animalType"] = animalId
@@ -299,6 +301,15 @@
                     localStorage.setItem("animalInfo", JSON.stringify(animalInfo));
                     window.location.href = "addAnimalInfo.html";
                 },
+                updateAnimalInfo(foodId, animalId, amount, eatable, info, animal_idx) {
+                    let animalInfo = {};
+                    animalInfo["amount"] = this.animalInfo.amount;
+                    animalInfo["eatable"] = this.animalInfo.eatable;
+                    animalInfo["info"] = this.animalInfo.info;
+                    animalInfo["animalInfoId"] = this.animalInfo.id;
+
+                    localStorage.setItem("animalInfo", JSON.stringify(animalInfo));
+                    window.location.href = "updateAnimalInfo.html";
                 deleteFood(foodId) {
                     axios({
                         method: "delete",
