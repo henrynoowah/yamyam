@@ -65,7 +65,7 @@
         </div>
 
     </div>
-
+    
     <template id="headerNav">
         <div class="navContents">
             <a href="foodList.html"><h3>Yam! Yam!</h3></a>
@@ -74,7 +74,7 @@
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
                 </li>
-                <li v-if="user.admin == 1">
+                <li v-if="admin">
                     <div class="dog">🐶</div>
                     <button @click="addFood">Add Food</button>
                 </li>
@@ -113,11 +113,15 @@
             template: "#headerNav",
             data() {
                 return {
-                    user: null
+                    user: null,
+                    admin: null
                 }
             },
             created() {
                 this.user = this.$user;
+                axios.get("/checkAdmin").then(res => {
+                    return this.admin = res.data === 1 ? true : false;
+                })
             },
             methods: {
                 hover2(a) {

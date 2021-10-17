@@ -39,7 +39,11 @@
                     <label for="name" >음식 이름을 적어주세요</label>
                     <input type="text" v-model:value="name">
                     <label for="category">음식 분류를 적어주세요</label>
-                    <input type="text" v-model:value="category">
+                    <select name="type" v-model:value="category" >
+                        <option :v-text="과일">과일</option>
+                        <option :v-text="야채">야채</option>
+                        <option :value="기타">기타</option>
+                    </select>
                     <input type="submit" value="등록">
                 </form>
             </div>
@@ -56,7 +60,7 @@
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
                 </li>
-                <li v-if="user.admin == 1">
+                <li v-if="admin">
                     <div class="dog">🐶</div>
                     <button @click="addFood">Add Food</button>
                 </li>
@@ -91,16 +95,20 @@
                 alert(message);
             }
         }
-        
+
         Vue.component("header-nav", {
             template: "#headerNav",
             data() {
                 return {
-                    user: null
+                    user: null,
+                    admin: null
                 }
             },
             created() {
                 this.user = this.$user;
+                axios.get("/checkAdmin").then(res => {
+                    return this.admin = res.data === 1 ? true : false;
+                })
             },
             methods: {
                 hover2(a) {
@@ -149,6 +157,7 @@
                         }
                     }).then(res => {
                         alert(res.data);
+                        window.location.href = "index.html";
                     }).catch(err => {
                     	exceptionHandler(err);
                     })
