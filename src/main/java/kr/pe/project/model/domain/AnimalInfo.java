@@ -1,5 +1,6 @@
 package kr.pe.project.model.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,7 +44,7 @@ public class AnimalInfo {
 	private String info;
 
 	@JsonIgnoreProperties({"animalInfo"})
-	@OneToOne(fetch=FetchType.LAZY, mappedBy = "animalInfo")
+	@OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "animalInfo")
 	private FoodInfo animal;
 	
 }

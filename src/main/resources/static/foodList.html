@@ -29,7 +29,7 @@
                 <div class="btns">
 
                     <button v-if="admin" @click="updateAnimalInfo">수정하기</button>
-                    <button @click="" v-if="admin">삭제</button>
+                    <button v-if="admin" @click="deleteAnimalInfo" v-if="admin">삭제</button>
                     <button @click="addReview(animalInfo.animal.food.id)">리뷰달기</button>
                     <button @click="infoShowToggle">닫기</button>
                 </div>
@@ -108,10 +108,11 @@
             <div>
                 <ul>
                     <li>
-                        먹어도 될까요? : <br>
+                        먹어도 될까요? :
                         <div v-if="eatableInfo(animalinfo.eatable)">{{animalinfo.amount}}</div>
                         <div v-else>먹으면 큰일나요 🤢</div>
                     </li>
+                    <br>
                     <li>
                         설명: <br>
                         {{animalinfo.info}}
@@ -123,8 +124,12 @@
                         ID: {{post.user.id}} - {{post.user.name}} - {{post.user.breed}}
                         <hr>
                         {{"⭐".repeat(post.star)}} <br>
-                        {{post.info}} 
-                    </div>        
+                        {{post.info}} <br>
+                        <hr>
+                        <!-- <div v-if="pust.user.id === user.id">
+                            <button>삭제</button>
+                        </div> -->
+                    </div> 
                 </div>
             </div>
         </div>
@@ -310,6 +315,20 @@
 
                     localStorage.setItem("animalInfo", JSON.stringify(animalInfo));
                     window.location.href = "updateAnimalInfo.html";
+                },
+                deleteAnimalInfo() {
+                    axios({
+                        method: "delete",
+                        url: "/deleteAnimalInfo",
+                        params: {
+                            id: this.animalInfo.id
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                },
                 deleteFood(foodId) {
                     axios({
                         method: "delete",

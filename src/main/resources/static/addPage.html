@@ -42,7 +42,7 @@
                     <select name="type" v-model:value="category" >
                         <option :v-text="과일">과일</option>
                         <option :v-text="야채">야채</option>
-                        <option :value="기타">기타</option>
+                        <option :v-text="기타">기타</option>
                     </select>
                     <input type="submit" value="등록">
                 </form>
@@ -157,7 +157,7 @@
                         }
                     }).then(res => {
                         alert(res.data);
-                        window.location.href = "index.html";
+                        window.location.href = "foodList.html";
                     }).catch(err => {
                     	exceptionHandler(err);
                     })

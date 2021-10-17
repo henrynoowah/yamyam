@@ -39,7 +39,7 @@ public class Food {
 	@Column(name = "food_category", nullable = false)	
 	private String category;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "food")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "food")
 	private List<Post> postList;
 	
 	@JsonIgnoreProperties({"animalInfo", "food"})

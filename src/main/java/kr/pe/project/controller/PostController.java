@@ -49,7 +49,7 @@ public class PostController {
 	
 	//editPost
 	@GetMapping("editPost")
-	public Post editPost(PostDTO.Edit post, long postId) throws Exception {
+	public String editPost(PostDTO.Edit post, long postId) throws Exception {
 		Integer star = post.getStar();
 		String info = post.getInfo();
 		String taste = post.getTaste();
@@ -63,7 +63,7 @@ public class PostController {
 				postDao.save(editPost);
 			}
 		
-		return editPost;
+		return "수정완료";
 	}
 	
 	//deletePost

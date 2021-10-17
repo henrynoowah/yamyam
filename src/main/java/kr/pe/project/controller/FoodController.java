@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.pe.project.annotation.NoSessionCheck;
 import kr.pe.project.dao.AnimalInfoRepository;
 import kr.pe.project.dao.FoodInfoRepository;
 import kr.pe.project.dao.FoodRepository;
+import kr.pe.project.dao.PostRepository;
 import kr.pe.project.model.domain.AnimalInfo;
 import kr.pe.project.model.domain.Food;
 import kr.pe.project.model.domain.FoodInfo;
+import kr.pe.project.model.domain.Post;
 import kr.pe.project.model.domain.dto.AnimalInfoDTO;
 import kr.pe.project.model.domain.dto.FoodDTO;
 
@@ -33,6 +36,9 @@ public class FoodController {
 	
 	@Autowired
 	private FoodInfoRepository foodInfoDao;
+	
+	@Autowired
+	private PostRepository postDao;
 	
 	// 일반회원 + 관리자용 메소드
 	// 전체 조회
@@ -150,9 +156,20 @@ public class FoodController {
 	
 
 	//delete food
+	@NoSessionCheck
 	@DeleteMapping("deleteFood")
-	public String deleteFood(long foodId) {
-		foodDao.deleteById(foodId);
+	public String deleteFood(long foodId) throws Exception {
+		Food food = foodDao.findById(foodId).get();
+//		kr.pe.project.model.domain.Food@226655b5
+		System.out.println(food);
+		Iterable<Post> postAll = postDao.findPostByFood(food);
+		
+		try{
+			postDao.deleteAll(postAll);
+		} catch(Exception e) {
+			
+		}
+		foodDao.delete(food);
 		
 		return "삭제 완료";
 	}
@@ -299,7 +316,7 @@ public class FoodController {
 	
 	
 	@PutMapping("editAnimalInfo")
-	public void editAnimalInfo(long animalInfoId, AnimalInfoDTO.Update info) {
+	public String editAnimalInfo(long animalInfoId, AnimalInfoDTO.Update info) {
 		AnimalInfo animalinfo = animalInfoDao.findById(animalInfoId).get();
 		
 		animalinfo.setAmount(info.getAmount());
@@ -307,5 +324,14 @@ public class FoodController {
 		animalinfo.setInfo(info.getInfo());
 		
 		animalInfoDao.save(animalinfo);
+		
+		return "수정성공";
+	}
+	
+	@DeleteMapping("deleteAnimalInfo")
+	public String deleteAnimalInfp(long id) {
+		animalInfoDao.deleteById(id);			
+		
+		return "삭제성공";
 	}
 }

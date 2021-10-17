@@ -82,11 +82,7 @@
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
                 </li>
-                <li>
-                    <div class="dog">🐶</div>
-                    <button @click="favorites">Favorites</button>
-                </li>
-                <li v-if="user.admin == 1">
+                <li v-if="admin">
                     <div class="dog">🐶</div>
                     <button @click="addFood">Add Food</button>
                 </li>
@@ -125,11 +121,15 @@
             template: "#headerNav",
             data() {
                 return {
-                    user: null
+                    user: null,
+                    admin: null
                 }
             },
             created() {
                 this.user = this.$user;
+                axios.get("/checkAdmin").then(res => {
+                    return this.admin = res.data === 1 ? true : false;
+                })
             },
             methods: {
                 hover2(a) {
@@ -137,10 +137,7 @@
                     a.removeItem("🐶");
                 },
                 myPage() {
-                    alert("myPage");
-                },
-                favorites() {
-                    alert("favorites");
+                    window.location.href="myPage.html"
                 },
                 addFood() {
                     window.location.href="addPage.html"
@@ -154,7 +151,7 @@
                         window.location.href = res.data;
                         sessionStorage.removeItem("user");
                     }).catch(err => {
-                        exceptionHandler(err);;
+                        exceptionHandler(err);
                     })
                 },
             },
