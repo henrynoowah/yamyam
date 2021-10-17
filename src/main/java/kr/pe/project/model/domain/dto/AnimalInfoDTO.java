@@ -37,4 +37,19 @@ public class AnimalInfoDTO {
 		private long id;
 	}
 	
+	@Data
+	@AllArgsConstructor
+	public static class Update {
+		private Integer eatable;
+		private String info;
+		private String amount;
+		
+		public AnimalInfo toEntity() {
+			return AnimalInfo.builder().eatable(eatable)
+									   .info(info)
+									   .amount(amount)
+									   .build(); 
+		}
+	}
+	
 }

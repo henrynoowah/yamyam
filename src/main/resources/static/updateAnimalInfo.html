@@ -55,7 +55,7 @@
 
         <div id="bodyContainer">
             <div class="pageContainer">
-                <form @submit.prevent="addAnimlInfo" class="addPageForm">
+                <form @submit.prevent="editAnimalInfo" class="addPageForm">
                     <label for="amount" >적정량</label>
                     <input type="text" v-model:value="amount">
                     <label for="eatable">먹어도 되나요?</label>
@@ -164,34 +164,33 @@
             el: "#pageContainer",
             data: {
                 //AnimalInfo 추가에 필요한 데이터
-                amount: 0,
-                animalType: null,
+                amount: null,
                 eatable: null,
                 info: null,
-                //FoodInfo와 연동할 음식 id
-                foodId: null
+                animalInfoId: null
             },
             created() {
                 const foodInfo = JSON.parse(localStorage.getItem("animalInfo"));
                 console.log(foodInfo)
-                this.foodId = foodInfo.foodId;
-                this.animalType = foodInfo.animalType;
+                this.amount = foodInfo.amount;
+                this.eatable = foodInfo.eatable;
+                this.info = foodInfo.info;
+                this.animalInfoId = foodInfo.animalInfoId;
                 localStorage.removeItem("animalInfo");
             },
             methods: {
-                addAnimlInfo() {
+                editAnimalInfo() {
                     axios({
                         method: "put",
-                        url: "/addAnimalInfo",
+                        url: "/editAnimalInfo",
                         params: {
                             amount: this.amount,
-                            animalType: this.animalType,
                             eatable: this.eatable,
                             info: this.info,
-                            foodId: this.foodId
+                            animalInfoId: this. animalInfoId
                         }
                     }).then(res => {
-                        alert(res.data);
+                        alert("수정완료");
                         window.location.href = "foodList.html";
                     }).catch(err => {
                         exceptionHandler(err);
