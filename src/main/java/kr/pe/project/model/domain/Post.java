@@ -43,7 +43,7 @@ public class Post {
 	private String info;
 	
 	@JsonIgnoreProperties({"postList"})
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY) 
 	@JoinColumn(name="user_id")
 	private PetUser user;
 	

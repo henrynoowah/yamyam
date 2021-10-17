@@ -1,8 +1,11 @@
 package kr.pe.project.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,6 +75,15 @@ public class PostController {
 		postDao.deleteById(postId);
 		
 		return "삭제완료";
+	}
+	
+	@PostMapping("getPost")
+	public List<Post> getPost(long foodId) {
+		System.out.println("리스트 - -------------------");
+		List<Post> postList = postDao.findPostByFoodId(foodId);
+		System.out.println("리스트 - " + postList);
+		
+		return postList;
 	}
 	
 	@ExceptionHandler

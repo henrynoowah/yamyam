@@ -12,164 +12,6 @@
     <link rel="stylesheet" href="style.css">
     <title>얌얌 꿀떡!</title>
 
-    <style>
-    
-		* ::-webkit-scrollbar {
-		  display: none;
-		}
-		 
-        /* --------------------------------- body -------------------------------------- */
-        #bodyContainer {
-            transform: translateY(60px);
-        }
-
-        .searchTool {
-            width: 60%;
-            margin: auto;
-        }
-        
-        .foodCards {
-            /* border: 1px solid black; */
-            width: 60%;
-            margin: auto;
-            display: grid;
-            grid-gap: 0.4rem;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 1fr;
-        }
-        
-        .card {
-            background-color: white;
-            width: 100%;
-            margin: auto;
-            border-radius: 10px;
-            aspect-ratio: 1/1;
-            
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transform-style: preserve-3d;
-            transition: ease-in 0.3s;
-            transform: perspective(600px) rotateY(0deg);
-        }
-
-        .flip {
-            transform: perspective(600px) rotateY(180deg);
-        }
-
-        .card:hover {
-            background-color: blanchedalmond;
-        }
-
-        .cardContent {
-            position: absolute;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: none;
-            transition: 1s ease;
-        }
-
-        .cardContent .btn { 
-            display: flex;
-            justify-content: center;
-        }
-
-        .front {
-            transform: rotateY(0deg);
-            transform: translateZ(1px);
-        }
-
-        /* 돌아가있기 떄문에 다시 돌려야 함 */
-        .back {
-            transform: rotateY(180deg);
-            opacity: 0;
-        }
-        
-        .cardBackShow {
-            opacity: 100;
-        }
-
-        .animalInfoBtn {
-            background-color: rgb(255, 255, 255);
-            width: 40%;
-            margin-top: 5px;
-            padding-top: 2px;
-            padding-bottom: 2px;
-            height: fit-content;
-            border-radius: 10px;
-            font-size: 5px;
-            transition: 0.2s ease-in-out;
-            /* filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192)); */
-        }
-
-        .animalInfoBtn:hover {
-            background-color: #FFE2EE;
-        }
-
-        #infoPop {
-            position: fixed;
-            width: 100%;
-            height: fit-content;
-            display: flex;
-            justify-content: center;
-            transform: translateY(200px);
-            z-index: 1;
-        }
-
-        #infoPop .btns {
-            display: flex;
-            justify-content: space-evenly;
-        }
-
-        .infoContentContainer {
-            width: 50%;
-            background-color: #FFE2EE;
-            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
-            display: flex;
-            flex-direction: column;
-            justify-content: center; 
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .infoContentContainer li {
-            list-style: none;
-        }
-
-        .infoContentContainer button {
-            width: 80%;
-            background: rgb(255, 255, 255);;
-            text-decoration: none;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            margin: 5px;
-            cursor: pointer;
-            transition: ease-in 0.3s;
-        }
-
-
-        #reviewContainer {
-            height: 20vh;
-            margin: 5px;
-            overflow: scroll;
-            background-color: rgb(255, 255, 255);
-            border-radius: 10px;
-        }
-
-        .review {
-            border: 1px solid #FFE2EE;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            margin: 10px;
-            padding: 5px;
-        }
-      
-    </style>
-
 </head>
 
 <body>
@@ -185,7 +27,9 @@
             <div class="infoContentContainer">
                 <info-com :animalinfo="animalInfo" :animaltype="animals"></info-com>
                 <div class="btns">
-                    <button v-if="user.admin" @click="updateAnimalInfo">수정하기</button>
+
+                    <button v-if="admin" @click="updateAnimalInfo">수정하기</button>
+                    <button v-if="admin" @click="deleteAnimalInfo" v-if="admin">삭제</button>
                     <button @click="addReview(animalInfo.animal.food.id)">리뷰달기</button>
                     <button @click="infoShowToggle">닫기</button>
                 </div>
@@ -218,7 +62,14 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <button v-if="user.admin">삭제</div> -->
+                        <div v-if="admin" class="back" :class="checked(boolean)" @click="deleteFood(foodList[i].id)"> 
+                            <div class="btn">
+                                <div class="animalInfoBtn">
+                                    삭제<br>
+                                    ⚙
+                                </div>
+                            </div>
+                        </div>
                     </div>
     
                 </div>
@@ -236,7 +87,7 @@
                     <div class="dog">🐶</div>
                     <button @click="myPage">My Page</button>
                 </li>
-                <li v-if="user.admin == 1">
+                <li v-if="admin">
                     <div class="dog">🐶</div>
                     <button @click="addFood">Add Food</button>
                 </li>
@@ -257,10 +108,11 @@
             <div>
                 <ul>
                     <li>
-                        먹어도 될까요? : <br>
+                        먹어도 될까요? :
                         <div v-if="eatableInfo(animalinfo.eatable)">{{animalinfo.amount}}</div>
                         <div v-else>먹으면 큰일나요 🤢</div>
                     </li>
+                    <br>
                     <li>
                         설명: <br>
                         {{animalinfo.info}}
@@ -272,8 +124,13 @@
                         ID: {{post.user.id}} - {{post.user.name}} - {{post.user.breed}}
                         <hr>
                         {{"⭐".repeat(post.star)}} <br>
-                        {{post.info}} 
-                    </div>        
+                        {{post.info}} <br>
+                        <hr>
+                        <div class="myPost" v-if="post.user.id === id">
+                            <button>삭제</button>
+                            <button>삭제</button>
+                        </div>
+                    </div> 
                 </div>
             </div>
         </div>
@@ -303,17 +160,21 @@
             } else {
                 alert(message);
             }
-        }
-                
+        };
+
         Vue.component("header-nav", {
             template: "#headerNav",
             data() {
                 return {
-                    user: null
+                    user: null,
+                    admin: null
                 }
             },
             created() {
                 this.user = this.$user;
+                axios.get("/checkAdmin").then(res => {
+                    return this.admin = res.data === 1 ? true : false;
+                })
             },
             methods: {
                 hover2(a) {
@@ -344,6 +205,14 @@
         Vue.component("info-com", {
             template: "#infoPage",
             props: ["animalinfo"],
+            data() {
+                return {
+                    id: null
+                }
+            },
+            created() {
+                this.id = this.$user.id
+            },
             methods: {
                 eatableInfo(boolean) {
                     return boolean? true : false;
@@ -360,10 +229,14 @@
                 foodInfo: [],
                 infoShow: false,
                 animalInfo: null,
-                user: null
+                user: null,
+                admin: null
             },
             async created() { 
                 this.user = this.$user;
+                await axios.get("/checkAdmin").then(res => {
+                    return this.admin = res.data === 1 ? true : false;
+                })
                 await axios.get("/foodListAll").then(res => {
                     this.foodList = res.data;
                     this.foodList.forEach(v => {
@@ -413,7 +286,7 @@
                     let info = "";
                     info = this.foodInfo.filter(v => v.food.id === foodId && v.animalInfo.animalType === animalId)
                     if(info.length === 0) {
-                        this.user.admin === 1 ? this.addAnimalInfo(foodId, animalId) : alert("죄송합니다 아직 정보가 없습니다");
+                        this.admin ? this.addAnimalInfo(foodId, animalId) : alert("죄송합니다 아직 정보가 없습니다");
                     } else {
                         axios({
                             method: "get",
@@ -451,6 +324,33 @@
 
                     localStorage.setItem("animalInfo", JSON.stringify(animalInfo));
                     window.location.href = "updateAnimalInfo.html";
+                },
+                deleteAnimalInfo() {
+                    axios({
+                        method: "delete",
+                        url: "/deleteAnimalInfo",
+                        params: {
+                            id: this.animalInfo.id
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                },
+                deleteFood(foodId) {
+                    axios({
+                        method: "delete",
+                        url: "/deleteFood",
+                        params: {
+                            foodId: foodId
+                        }
+                    }).then(res => {
+                        alert(res.data)
+                        window.location.href = "foodList.html";
+                    }).catch(err => {
+                        exceptionHandler(err)
+                    })
                 }
             }
         });

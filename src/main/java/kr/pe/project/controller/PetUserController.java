@@ -101,4 +101,11 @@ public class PetUserController {
 		session.invalidate();
 		return "🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾";
 	}
+	
+	@GetMapping("checkAdmin")
+	public Integer checkAdmin(HttpSession session) {
+		PetUserDTO.Session user = (Session) session.getAttribute("user");
+		return user.getAdmin();
+	}
+   
 }
