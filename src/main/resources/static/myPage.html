@@ -3,6 +3,7 @@
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./script.js"></script>
 
 <head>
     <meta charset="UTF-8">
@@ -87,68 +88,7 @@
     </template>
 
     <script>
-
-        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
-
-        window.onload = () => {
-            axios({
-                method: "post",
-                url: "/checkSession"
-            }).catch(err => {
-                exceptionHandler(err);
-            })
-        };
-
-        exceptionHandler = (err) => {
-            let message = err.response.data.message;
-            if(message === "session end") {
-                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
-                window.location.href="index.html"
-            } else {
-                alert(message);
-            }
-        }
-        
-        Vue.component("header-nav", {
-            template: "#headerNav",
-            data() {
-                return {
-                    user: null,
-                    admin: null
-                }
-            },
-            created() {
-                this.user = this.$user;
-                axios.get("/checkAdmin").then(res => {
-                    return this.admin = res.data === 1 ? true : false;
-                })
-            },
-            methods: {
-                hover2(a) {
-                    console.log(a);
-                    a.removeItem("🐶");
-                },
-                myPage() {
-                    window.location.href="myPage.html"
-                },
-                addFood() {
-                    window.location.href="addPage.html"
-                },
-                logout() {
-                    axios({
-                        method: "get",
-                        url: "/logout"
-                    }).then(res => {
-                        console.log(res.data);
-                        window.location.href = res.data;
-                        sessionStorage.removeItem("user");
-                    }).catch(err => {
-                        exceptionHandler(err);
-                    })
-                },
-            },
-        });
-
+    
         new Vue({
             el: "#MyPageContainer",
             data: {

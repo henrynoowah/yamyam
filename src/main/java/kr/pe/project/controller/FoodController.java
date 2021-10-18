@@ -118,7 +118,6 @@ public class FoodController {
 		
 		return "수정 완료";
 	}
-	
 
 	//delete food
 	@DeleteMapping("deleteFood")

@@ -3,6 +3,7 @@
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./script.js"></script>
 
 <head>
     <meta charset="UTF-8">
@@ -19,7 +20,7 @@
     <div id="foodListContainer">
 
         <div id="header">
-            <!-- <main-header/> -->
+            <!-- <header-vue></header-vue> -->
             <header-nav class="headerNav"/>
         </div>
 
@@ -130,12 +131,16 @@
         </div>
     </template>
 
+    
+    
     <script>
 
-        import MainHeader from 'MainHeader.vue'
+        // import MainHeader from "./shared-components/MainHeader.vue";
+
 
         // 뷰에서 사용할 수 있는 global 변수 선언!
         Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+        // Vue.component(MainHeader.name, MainHeader);
 
         window.onload = () => {
             axios({
@@ -155,46 +160,6 @@
                 alert(message);
             }
         };
-
-        Vue.component("header-nav", {
-            template: "#headerNav",
-            data() {
-                return {
-                    user: null,
-                    admin: null
-                }
-            },
-            created() {
-                this.user = this.$user;
-                axios.get("/checkAdmin").then(res => {
-                    return this.admin = res.data === 1 ? true : false;
-                })
-            },
-            methods: {
-                hover2(a) {
-                    console.log(a);
-                    a.removeItem("🐶");
-                },
-                myPage() {
-                    window.location.href="myPage.html"
-                },
-                addFood() {
-                    window.location.href="addPage.html"
-                },
-                logout() {
-                    axios({
-                        method: "get",
-                        url: "/logout"
-                    }).then(res => {
-                        console.log(res.data);
-                        window.location.href = res.data;
-                        sessionStorage.removeItem("user");
-                    }).catch(err => {
-                        exceptionHandler(err);
-                    })
-                },
-            },
-        });
 
         Vue.component("info-com", {
             template: "#infoPage",
@@ -347,6 +312,7 @@
                         }
                     }).then(res => {
                         alert(res.data);
+                        window.location.href = "foodList.html";
                     }).catch(err => {
                         exceptionHandler(err);
                     })
