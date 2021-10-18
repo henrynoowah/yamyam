@@ -196,7 +196,6 @@ public class FoodController {
 	
 	@DeleteMapping("deleteAnimalInfo")
 	public String deleteAnimalInfo(long id) throws Exception {
-		System.out.println("오ㅑ 안지워지냐!!");
 		AnimalInfo animalInfo = animalInfoDao.findById(id).get();
 		FoodInfo foodInfo = foodInfoDao.findFoodInfoByAnimalInfo(animalInfo);
 		foodInfoDao.delete(foodInfo);				

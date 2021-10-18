@@ -234,6 +234,11 @@
         justify-content: center;
     }
 
+    .cardContent h3 { 
+        color: rgb(153, 101, 101);
+        font-size: large;
+    }
+
     .front {
         transform: rotateY(0deg);
         transform: translateZ(1px);

@@ -37,12 +37,6 @@
         </div>
 
         <div id="bodyContainer">
-
-            <div class="searchTool">
-                2021-10-12 : 여기에 서치바랑 카테고리 버튼들이 들어갈꺼임!<br>
-                2021-10-14 : 시간 없어서 못할듯!
-                <hr>
-            </div>
     
             <div class="foodCards">
                 <div class="card" :class="checked(boolean)" v-for="(boolean, i) in flip" @click="flipCard(i)">
@@ -138,7 +132,7 @@
 
     <script>
 
-        // import MainHeader from 'MainHeader.vue'
+        import MainHeader from 'MainHeader.vue'
 
         // 뷰에서 사용할 수 있는 global 변수 선언!
         Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
@@ -280,7 +274,8 @@
                     // Vue의 인덱스값 사용 제한 
                     // 실시간 업데이트에 대한 제한으로 아래 함수를 활용
                     // Vue.set(바꾸고 싶은 데이터, 데이터 인덱스 위치, 새로 작성하는 값)
-                    this.$set(this.flip, i, !this.flip[i]);
+                    // this.$set(this.flip, i, !this.flip[i]);
+                    Vue.set(this.flip, i, !this.flip[i]);
                 },
                 checked(boolean) {
                     return boolean? { flip: false, cardBackShow: false } : { flip: true ,cardBackShow: true }
