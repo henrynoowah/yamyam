@@ -112,7 +112,7 @@
 
                 axios.get("/getAnimalType").then(res => {
                     this.animals = res.data;
-                    this.defaultType = res.data[user.animalType-1].name;
+                    this.defaultType = res.data[this.$user.animalType-1].name;
                 })
                 this.defaultType = this.animals.filter( v => v.id == this.animalType);
             },
@@ -131,7 +131,9 @@
                             weight: this.weight
                         }
                     }).then(res => {
-                        alert(res.data);
+                        alert("수정완료");
+                        sessionStorage.removeItem("user");
+                        sessionStorage.setItem("user", JSON.stringify(res.data));
                     }).catch(err => {
                         exceptionHandler(err);
                     })

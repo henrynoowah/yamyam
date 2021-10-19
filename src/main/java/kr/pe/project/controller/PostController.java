@@ -16,6 +16,7 @@ import kr.pe.project.model.domain.dto.PostDTO;
 
 @RestController
 public class PostController {
+	
 	PostController() {
 		System.out.println("PostController(){} ------------");
 	}

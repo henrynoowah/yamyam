@@ -3,13 +3,18 @@ package kr.pe.project.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-import kr.pe.project.annotation.NoSessionCheck;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import kr.pe.project.dao.AnimalInfoRepository;
 import kr.pe.project.dao.FoodInfoRepository;
 import kr.pe.project.dao.FoodRepository;
@@ -144,6 +149,30 @@ public class FoodController {
 		
 		return "삭제 완료";
 	}
+
+	
+//	public void addAnimalInfoPage(HttpServletResponse response, Long foodId, Long animalId) throws IOException {
+//		response.sendRedirect("addAnimalInfo.html");
+//	}
+	
+//	@RequestMapping(value = "addAnimalInfoPage", method = RequestMethod.POST)
+//	public String addAnimalInfoPage(@PathParam("foodId") Long foodId, 
+//									@PathParam("animalId") Long animalId) {
+//
+//		
+//		return "redirect:/addAnimalInfo.html";
+//	}
+	
+//	@RequestMapping("addAnimalInfoPage")
+//	public ModelAndView addAnimalInfoPage(Model model, Long foodId, Long animalId) {
+//		
+//		ModelAndView mv = new ModelAndView("addAnimalInfo.html");
+////		mv.setViewName("addAnimalInfo.html");
+//		mv.addObject("foodId", foodId);
+//		mv.addObject("animalId", animalId);
+//		
+//		return mv;
+//	}
 	
 	//add animalInfo - 미테스트 개그튼그
 	@PutMapping("addAnimalInfo")

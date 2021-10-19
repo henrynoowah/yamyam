@@ -204,7 +204,6 @@
         
         cursor: pointer;
         transform-style: preserve-3d;
-        transform-style: preserve-3d;
         transition: ease-in 0.3s;
         transform: perspective(600px) rotateY(0deg);
     }

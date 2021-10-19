@@ -13,6 +13,7 @@ import kr.pe.project.dao.PetUserRepository;
 import kr.pe.project.model.domain.PetUser;
 import kr.pe.project.model.domain.dto.PetUserDTO;
 import kr.pe.project.model.domain.dto.PetUserDTO.Session;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 //@SessionAttributes({"user"})
@@ -34,9 +35,10 @@ public class PetUserController {
 		return user.getAdmin();
 	}
 	
+	
 	@NoSessionCheck
 	@PostMapping("login")
-	public PetUser login(PetUserDTO.Login login, HttpSession session) throws Exception {
+	public PetUser login(PetUserDTO.Login login, @ApiIgnore HttpSession session) throws Exception {
 		
 		PetUser user = null;
 		user = dao.findPetUserById(login.getId());
@@ -59,7 +61,7 @@ public class PetUserController {
 	
 	@NoSessionCheck
 	@GetMapping("logout")
-	public String logout(HttpSession session) throws Exception {
+	public String logout(@ApiIgnore HttpSession session) throws Exception {
 		session.invalidate();
 		return "index.html";
 	}
@@ -79,18 +81,20 @@ public class PetUserController {
 	}
 
 	@PostMapping("editPetUser")
-	public String editPetUser(PetUserDTO.Edit petUser) throws Exception {
+	public PetUser editPetUser(PetUserDTO.Edit petUser) throws Exception {
 		PetUser user = dao.findById(petUser.getId()).get();
 		
 		if (petUser.getAnimalType().equals("") 
 				|| petUser.getName().equals("") 
-				|| petUser.getWeight().equals("")) {
+				|| petUser.getWeight().equals("")
+				|| petUser.getBreed().equals("")) {
 			throw new Exception("작성하지 않은 항목이 존재합니다.");
 		}
 		
 		user.setAnimalType(petUser.getAnimalType());
 		user.setName(petUser.getName());
 		user.setWeight(petUser.getWeight());
+		user.setBreed(petUser.getBreed());
 		
 		if(petUser.getPw().equals(user.getPw())) {
 			throw new Exception("이전 비밀번호와 일치합니다");
@@ -99,7 +103,7 @@ public class PetUserController {
 		}
 		dao.save(user);
 		
-		return "수정완료";
+		return user;
 	}
 	
 	@DeleteMapping("deletePetUser")
