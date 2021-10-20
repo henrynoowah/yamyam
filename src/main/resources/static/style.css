@@ -1,0 +1,404 @@
+
+    body {
+        background-color: #FFE2EE;
+        margin: 0px;
+    }
+
+    * ::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    /* --------------------------------- index.html -------------------------------------- */
+
+    .container {
+        background-color: #FFE2EE;
+        position: absolute;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        width: 100%;
+    }
+
+    .landingBtn {
+        background-color: #FF8CBD;
+        text-decoration: none;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .landingBtn:hover {
+        background-color: #ffadd0;
+    }
+
+    #landingPage {
+        width: 450px;
+        position: relative;
+    }
+
+    .landing {
+        margin: auto;
+        padding: 30px;
+        display: flex;
+        width: 350px;
+        height: 250px;
+        text-align: center;
+        border-radius: 10px;
+        height: 50%;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .popUpContainer {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .landingPopUp {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        padding: 30px;
+        background-color: #FF8CBD;
+        border-radius: 10px;
+    }
+
+    .landingPopUp.login {
+        transform: translateY(-250px);
+    }
+
+    .landingPopUp.register {
+        transform: translateY(-400px);
+    }
+
+    .popUpForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .popUpForm label {
+        margin: 10px;
+    }
+
+    .popUpContent button, .popUpForm input[type=submit], .popUpForm select {
+        background-color:white;
+        border: none;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .popUpContent button, .popUpForm input[type=submit] {
+        margin-top: 10px;
+    }
+
+    .popUpContent button:hover, .popUpForm input[type=submit]:hover {
+        background-color: #ffd0e3;
+    }
+
+    .popUpForm input[type=text],.popUpForm input[type=number], .popUpForm input[type=password] {
+        text-align: center;
+        padding: 5px;
+        border-radius: 10px;
+        border: none;
+    }
+    
+    /* --------------------------------- header -------------------------------------- */
+
+    #header{
+        position: fixed;
+        width: 100%;
+        height: 60px;
+        background-color: white;
+        margin-bottom: 10px;
+        z-index: 1;
+        filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+    }
+
+    #header a {
+        text-decoration: none;
+    }
+
+    .navContents {
+        width: 80%;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navLinks {
+        width: 30%;
+        display: flex;
+        align-content: flex-end;
+        justify-content: space-between;
+    }
+    
+    .navLinks li {
+        list-style: none;
+    }
+
+    .navLinks li button {
+        font-size: 0.8rem;
+        font-weight: bold;
+        background: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 1s ease-in;
+    }
+
+    .navLinks li:hover .dog {
+        display: block;
+    }
+
+    .navLinks li .dog {
+        position: absolute;
+        transform: translateX(-20px);
+        display: none;
+    }
+
+
+    /* --------------------------------- foodList.html -------------------------------------- */
+
+    #bodyContainer {
+        transform: translateY(60px);
+    }
+
+    .searchTool {
+        width: 60%;
+        margin: auto;
+    }
+    
+    .foodCards {
+        /* border: 1px solid black; */
+        width: 60%;
+        margin: auto;
+        display: grid;
+        grid-gap: 0.4rem;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 1fr;
+    }
+    
+    .card {
+        background-color: white;
+        width: 100%;
+        margin: auto;
+        border-radius: 10px;
+        aspect-ratio: 1/1;
+        
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: ease-in 0.3s;
+        transform: perspective(600px) rotateY(0deg);
+    }
+
+    .flip {
+        transform: perspective(600px) rotateY(180deg);
+    }
+
+    .card:hover {
+        background-color: blanchedalmond;
+    }
+
+    .cardContent {
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: none;
+        transition: 1s ease;
+    }
+
+    .cardContent .btn { 
+        display: flex;
+        justify-content: center;
+    }
+
+    .cardContent h3 { 
+        color: rgb(153, 101, 101);
+        font-size: large;
+    }
+
+    .front {
+        transform: rotateY(0deg);
+        transform: translateZ(1px);
+    }
+    
+    /* 돌아가있기 떄문에 다시 돌려야 함 */
+    .back {
+        transform: rotateY(180deg) translateZ(-1px);
+        opacity: 0;
+    }
+    
+    .cardBackShow {
+        opacity: 100;
+    }
+
+    .animalInfoBtn {
+        background-color: rgb(255, 255, 255);
+        width: 40%;
+        margin-top: 5px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        height: fit-content;
+        border-radius: 10px;
+        font-size: 5px;
+        transition: 0.2s ease-in-out;
+        /* filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192)); */
+    }
+
+    .animalInfoBtn:hover {
+        background-color: #FFE2EE;
+    }
+
+    #infoPop {
+        position: fixed;
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        transform: translateY(200px);
+        z-index: 1;
+    }
+
+    #infoPop .btns {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .infoContentContainer {
+        width: 50%;
+        background-color: #FFE2EE;
+        filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .infoContentContainer li {
+        list-style: none;
+    }
+
+    .infoContentContainer button {
+        width: 80%;
+        background: rgb(255, 255, 255);;
+        text-decoration: none;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+        margin: 5px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+
+    #reviewContainer {
+        height: 30vh;
+        margin: 5px;
+        overflow: scroll;
+        background-color: rgb(255, 255, 255);
+        border-radius: 10px;
+    }
+
+    .review {
+        border: 1px solid #FFE2EE;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin: 10px;
+        padding: 5px;
+    }
+
+    .myPost {
+        display: flex;
+        border-radius: 5px;
+
+    }
+    .myPost button {
+        padding: 5px;
+        border: 1px solid #FFE2EE;
+    }
+
+    .myPost button:hover {
+        background-color:#FFE2EE;
+    }
+
+    /* --------------------------------- form container -------------------------------------- */
+    
+    .pageContainer {
+        margin-top: 80px;
+        width: 50%;
+        height: 50%;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgb(255, 255, 255);
+        filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+        /* display: flex;
+        flex-direction: column;
+        justify-content: center;  */
+    }
+    
+    .addPageForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    #bodyContainer button{
+        background:#FFE2EE;
+        border: none;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .addPageForm input, .addPageForm select {  
+        border: none;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: ease-in 0.3s;
+    }
+
+    .addPageForm input:not([type="submit"]), .addPageForm select {
+        background-color:#ffffff;
+        box-shadow: 0 0 0 1px #FFE2EE inset;
+    }
+
+    .addPageForm input[type=submit] {
+        background-color:#FFE2EE;
+    }
+
+    .addPageForm input[type=submit]:hover {
+        background-color:#ffffff;
+        box-shadow: 0 0 0 1px #FFE2EE inset;
+    }

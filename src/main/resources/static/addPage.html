@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./script.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>얌얌 꿀떡!</title>
+
+    <style>
+       
+        #bodyContainer {
+            transform: translateY(60px);
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    
+    <div id="pageContainer">
+
+        <div id="header">
+            <header-nav class="headerNav"></header-nav>
+        </div>
+
+        <div id="bodyContainer">
+            <div class="pageContainer">
+                <form @submit.prevent="addFood"  class="addPageForm">
+                    <label for="name" >음식 이름을 적어주세요</label>
+                    <input type="text" v-model:value="name">
+                    <label for="category">음식 분류를 적어주세요</label>
+                    <select name="type" v-model:value="category" >
+                        <option :v-text="과일">과일</option>
+                        <option :v-text="야채">야채</option>
+                        <option :v-text="기타">기타</option>
+                    </select>
+                    <input type="submit" value="등록">
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <template id="headerNav">
+        <div class="navContents">
+            <a href="foodList.html"><h3>Yam! Yam!</h3></a>
+            <ul class="navLinks">
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="myPage">My Page</button>
+                </li>
+                <li v-if="admin">
+                    <div class="dog">🐶</div>
+                    <button @click="addFood">Add Food</button>
+                </li>
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="logout">Log Out</button>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <script>
+
+        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+
+        window.onload = () => {
+            axios({
+                method: "post",
+                url: "/checkSession"
+            }).catch(err => {
+                exceptionHandler(err);
+            })
+        };
+
+
+        exceptionHandler = (err) => {
+            let message = err.response.data.message;
+            if(message === "session end") {
+                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+                window.location.href="index.html"
+            } else {
+                alert(message);
+            }
+        };
+
+        new Vue({
+            el: "#pageContainer",
+            data: {
+                name: null,
+                category: null,
+                user: null
+            },
+            created() {
+                this.user = this.$user;
+            },
+            methods: {
+                addFood() {
+                    axios({
+                        method: "post",
+                        url: "/addFood",
+                        params: {
+                            name: this.name,
+                            category: this.category
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                        window.location.href = "foodList.html";
+                    }).catch(err => {
+                    	exceptionHandler(err);
+                    })
+                }
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
+

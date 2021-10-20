@@ -9,78 +9,93 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>얌얌 꿀떡!</title>
 </head>
 
 <style>
+
     body {
-        margin: auto;
-    }
-    .landingBtn {
-        text-decoration: none;
-        padding: 10px;
-        border: 1px solid black;
-        border-radius: 5px;
-        margin-top: 20px;
-    }
-
-    #landingPage {
-        display: flex;
-        width: 20%;
-        height: 250px;
-        text-align: center;
-        border-radius: 10px;
-        height: 50%;
-        flex-direction: column;
-        justify-content: space-around;
-    }
-
-    .landingPop {
-        position: absolute;
-        align-content: center;
-        width: 50%;
-        background-color: aqua;
-        height: 250px;
+        margin: 0px;
+        overflow: hidden;
     }
 
 </style>
 
 <body>
-
-    <h3>빙봉과 하운</h3>
     
-    <hr>
-
-    <div id="landingPage">
-
-        <button @click="loginBtn" class="landingBtn">로그인 하기 🐕</button>
-        <button @click="registerBtn" class="landingBtn">회원가입 🐈</button>
-
-        <login v-if="login" class="landingPopUp"></login>
-        <register v-if="register" class="landingPopUp"></register>
+    <div class="container">
         
+        <h3>Yam! Yam! 꿀떡!</h3>   
+        <div id="landingPage">
+    
+            <div class="landing">
+                <button @click="loginBtn" class="landingBtn">로그인 하기 🐕</button>
+                <button @click="registerBtn" class="landingBtn">회원가입 🐈</button>
+            </div>
+            
+            <div class="popUpContainer">
+                <login v-if="login" class="landingPopUp login" ></login>
+                <register v-if="register" class="landingPopUp register"></register>
+            </div>
+            
+        </div>
+
     </div>
 
-
-
     <template id="login">
-        <div class="landingPop">
+        <div class="popUpContent" >
+            <form @submit.prevent="login" method="post" class="popUpForm">
+                <label for="name">아이디를 입력하세요</label>
+                <input type="text" v-model:value="id">
+                <label for="name">비밀번호를 입력하세요</label>
+                <input type="password" v-model:value="pw">
+                <br>
+                <input type="submit" value="로그인">
+            </form>
             <button @click="loginBtn">닫기</button>
-            <hr>
-            로그인 폼 폼 작성할 예정!!
-            <form action=""></form>
         </div>
     </template>
 
     <template id="register">
-        <div class="landingPop">
+        <div class="popUpContent">
+            <form @submit.prevent="register" class="popUpForm">
+                <label for="id">아이디를 입력하세요</label>
+                <input type="text" v-model:value="id">
+                <label for="pw">비밀번호를 입력하세요</label>
+                <input type="password" v-model:value="pw">
+                <label for="name">이름을 입력하세요</label>
+                <input type="text" v-model.lazy:value="name">
+                <label for="type">{{name}}는 어떤 동물인가요?</label>
+                <select name="type" v-model:value="animalType">
+                    <option :value="animal.id" v-for="animal in animals">{{animal.name}}</option>
+                </select>
+                <label for="breed">{{name}}의 종을 입력해주세요</label>
+                <input type="text" v-model:value="breed">
+                <label for="weight">무게를 입력해주세요(kg)</label>
+                <input type="number" v-model:value="weight">
+                <br>
+                <input type="submit" value="회원가입">
+            </form>
             <button @click="registerBtn">닫기</button>
-            <hr>
-            회원가입 작성할 예정!!
-            <form action=""></form>
         </div>
     </template>
 
     <script>
+
+        window.onload = () => {
+            sessionStorage.removeItem("user");
+        };
+
+        // exceptionHandler = (err) => {
+        //     let message = err.response.data.message;
+        //     if(message === "session end") {
+        //         alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+        //         window.location.href="index.html"
+        //     } else {
+        //         alert(message);
+        //     }
+        // }
 
         let eventBus = new Vue();
 
@@ -88,13 +103,29 @@
             template: "#login",
             data() {
                 return {
-                    id: "아이디",
-                    pw: "비밀번호"
+                    id: "",
+                    pw: ""
                 }
             },
             methods: {
                 loginBtn(){
                     this.$root.$emit("test")
+                },
+                login() {
+                    axios({
+                        method: "post",
+                        url: "/login",
+                        params: {
+                            id: this.id,
+                            pw: this.pw
+                        }
+                    }).then(res => {
+                        console.log(res.data);
+                        sessionStorage.setItem("user", JSON.stringify(res.data));
+                        window.location.href = "foodList.html"
+                    }).catch(err => {
+                        alert(err.response.data.message);
+                    })
                 }
             },
         });
@@ -103,16 +134,46 @@
             template: "#register",
             data() {
                 return {
-                    id: "아이디",
-                    pw: "비밀번호",
-                    type: "",
+                    id: "",
+                    pw: "",
+                    name: "",
+                    animalType: "",
                     breed: "",
-                    weight: ""
+                    weight: "",
+                    animals: [],
                 }
+            },
+            created() {
+                axios.get("/getAnimalType").then(res => {
+                    this.animals = res.data;
+                }).catch(err => {
+                    console.log(err.response);
+                })
             },
             methods: {
                 registerBtn(){
                     this.$root.$emit("test")
+                },
+                register(){
+                    console.log("hello");
+                    axios({
+                        method: "post",
+                        url : "/register",
+                        params: {
+                            id: this.id,
+                            pw: this.pw,
+                            name: this.name,
+                            admin: 0,
+                            animalType: this.animalType,
+                            breed: this.breed,
+                            weight: this.weight
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                        this.registerBtn();
+                    }).catch(err => {
+                    	alert(err.response.data.message);
+                    })
                 }
             },
         });
@@ -121,7 +182,7 @@
             el: "#landingPage",
             data: {
                 login: false,
-                register: false
+                register: false,
             },
             methods: {
                 loginBtn() {
@@ -135,6 +196,7 @@
                 }
             }
         });
+
 
     </script>
 

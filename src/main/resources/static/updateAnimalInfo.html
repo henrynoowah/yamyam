@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>얌얌 꿀떡!</title>
+
+    <style>
+       
+        #bodyContainer {
+            transform: translateY(60px);
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .addPageContainer {
+            width: 50%;
+            height: 50%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgb(255, 255, 255);
+            filter: drop-shadow(0.25rem 0.25rem 0.10rem rgb(207, 192, 192));
+        }
+
+        .addPageForm {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    
+    <div id="pageContainer">
+
+        <div id="header">
+            <header-nav class="headerNav"></header-nav>
+        </div>
+
+        amount: null,
+        eatable: null,
+        info: null,
+        <!-- 여기서부터 동물별 음식추가 폼 작성 -->
+
+        <div id="bodyContainer">
+            <div class="pageContainer">
+                <form @submit.prevent="editAnimalInfo" class="addPageForm">
+                    <label for="amount" >적정량</label>
+                    <input type="text" v-model:value="amount">
+                    <label for="eatable">먹어도 되나요?</label>
+                    <select name="type" v-model:value="eatable">
+                        <option :value="1">💚</option>
+                        <option :value="0">❌</option>
+                    </select>
+                    <label for="info">상세한 설명을 적어주세요</label>
+                    <input type="text" v-model:value="info">
+                    <input type="submit" value="등록">
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <template id="headerNav">
+        <div class="navContents">
+            <a href="foodList.html"><h3>Yam! Yam!</h3></a>
+            <ul class="navLinks">
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="myPage">My Page</button>
+                </li>
+                <li v-if="admin">
+                    <div class="dog">🐶</div>
+                    <button @click="addFood">Add Food</button>
+                </li>
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="logout">Log Out</button>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <script>
+
+        Vue.prototype.$user = JSON.parse(sessionStorage.getItem("user"));
+
+        window.onload = () => {
+            axios({
+                method: "post",
+                url: "/checkSession"
+            }).catch(err => {
+                exceptionHandler(err);
+            })
+        };
+
+        exceptionHandler = (err) => {
+            let message = err.response.data.message;
+            if(message === "session end") {
+                alert("세션이 만료되었습니다 다시 로그인 부탁드립니다");
+                window.location.href="index.html"
+            } else {
+                alert(message);
+            }
+        }
+        
+        Vue.component("header-nav", {
+            template: "#headerNav",
+            data() {
+                return {
+                    user: null,
+                    admin: null
+                }
+            },
+            created() {
+                this.user = this.$user;
+                axios.get("/checkAdmin").then(res => {
+                    return this.admin = res.data === 1 ? true : false;
+                })
+            },
+            methods: {
+                hover2(a) {
+                    console.log(a);
+                    a.removeItem("🐶");
+                },
+                myPage() {
+                    window.location.href="myPage.html"
+                },
+                addFood() {
+                    window.location.href="addPage.html"
+                },
+                logout() {
+                    axios({
+                        method: "get",
+                        url: "/logout"
+                    }).then(res => {
+                        console.log(res.data);
+                        window.location.href = res.data;
+                        sessionStorage.removeItem("user");
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                },
+            },
+        });
+
+        new Vue({
+            el: "#pageContainer",
+            data: {
+                //AnimalInfo 추가에 필요한 데이터
+                amount: null,
+                eatable: null,
+                info: null,
+                animalInfoId: null
+            },
+            created() {
+                const foodInfo = JSON.parse(localStorage.getItem("animalInfo"));
+                console.log(foodInfo)
+                this.amount = foodInfo.amount;
+                this.eatable = foodInfo.eatable;
+                this.info = foodInfo.info;
+                this.animalInfoId = foodInfo.animalInfoId;
+                localStorage.removeItem("animalInfo");
+            },
+            methods: {
+                editAnimalInfo() {
+                    axios({
+                        method: "put",
+                        url: "/editAnimalInfo",
+                        params: {
+                            amount: this.amount,
+                            eatable: this.eatable,
+                            info: this.info,
+                            animalInfoId: this. animalInfoId
+                        }
+                    }).then(res => {
+                        alert("수정완료");
+                        window.location.href = "foodList.html";
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                }
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
+

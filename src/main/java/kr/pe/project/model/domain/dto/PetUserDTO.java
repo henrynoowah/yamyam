@@ -12,6 +12,7 @@ public class PetUserDTO {
 	public static class Register {
 		private String id;
 		private String pw;
+		private String name;
 		private Integer animalType;
 		private String breed;
 		private Integer admin;
@@ -20,12 +21,26 @@ public class PetUserDTO {
 		public PetUser toEntity() {
 			return PetUser.builder().id(id)
 									.pw(pw)
+									.name(name)
 									.animalType(animalType)
 									.breed(breed)
 									.admin(admin)
 									.weight(weight)
 									.build();
 		}
+	}
+	
+	@Data
+	@AllArgsConstructor
+	public static class Edit {
+		private String id;
+		private String pw;
+		private String name;
+		private Integer animalType;
+		private String breed;
+		private Integer admin;
+		private Integer weight;
+		
 	}
 	
 	@Data
@@ -51,4 +66,10 @@ public class PetUserDTO {
 		private Integer admin;
 	}
 	
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class Delete {
+		private String id;
+	}
 }

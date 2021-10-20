@@ -1,0 +1,30 @@
+- editPost
+{
+	"star" : ,
+	"taste" : "",
+	"info" : "",
+	"postId" :
+}
+
+- addPost
+{
+	"star" : 5,
+	"taste" : "단 맛",
+	"info" : "인간들에게만 귤을 맛보게 하는 건 불공평하다"
+}
+
+- addAnimalInfo
+foodId,
+{
+    "eatable": 1,
+    "animalType": 1,
+    "amount": "두 알",
+    "info": "delicious",
+}
+
+- editFood
+foodId,
+{
+	"name": "",
+	"category": ""
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./script.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>얌얌 꿀떡!</title>
+
+    <style>
+       
+        #bodyContainer {
+            transform: translateY(60px);
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    
+    <div id="MyPageContainer">
+
+        <div id="header">
+            <header-nav class="headerNav"></header-nav>
+        </div>
+
+        <!-- 여기서부터 리뷰 페이지 작성 -->
+        <div id="bodyContainer">
+            <div class="pageContainer">
+                <form @submit.prevent="submitUserInfo" class="addPageForm">
+                    <label for="id" >아이디</label>
+                    <span type="text">{{id}}</span>
+
+                    <label for="name">비밀번호 변경</label>
+                    <input type="password" v-model:value="pw">
+
+                    <label for="name">이름</label>
+                    <input type="text" v-model.lazy:value="name">
+
+                    <label for="Breed">{{name}}은 어떤 동물인가요?</label>
+                    <select name="type" v-model:value="animalType" >
+                        <option :value="null" hidden="" disabled="disabled" selected="selected">{{defaultType}}</option>
+                        <option :value="animal.id" v-for="animal in animals">{{animal.name}}</option>
+                    </select>
+
+                    <label for="breed" >{{name}}의 종을 입력해주세요</label>
+                    <input type="text" v-model:value="breed">
+
+                    <label for="weight" >Weight (Kg)</label>
+                    <input type="text" v-model:value="weight">
+
+                    <input type="submit" value="수정">
+                </form>
+                <button @click="deleteUser">회원탈퇴</button>
+            </div>
+        </div>
+
+    </div>
+    
+    <template id="headerNav">
+        <div class="navContents">
+            <a href="foodList.html"><h3>Yam! Yam!</h3></a>
+            <ul class="navLinks">
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="myPage">My Page</button>
+                </li>
+                <li v-if="admin">
+                    <div class="dog">🐶</div>
+                    <button @click="addFood">Add Food</button>
+                </li>
+                <li>
+                    <div class="dog">🐶</div>
+                    <button @click="logout">Log Out</button>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <script>
+    
+        new Vue({
+            el: "#MyPageContainer",
+            data: {
+                defaultType: null,
+                animalType: null,
+                animals: [],
+                breed: null,
+                id: null,
+                pw: "",
+                name: null,
+                weight: null,
+                admin: null,
+            },
+            created() {
+                this.id = this.$user.id;
+                this.name = this.$user.name;
+                this.weight = this.$user.weight;
+                this.breed = this.$user.breed
+                this.animalType = this.$user.animalType;
+                this.admin =this.$user.admin
+
+                axios.get("/getAnimalType").then(res => {
+                    this.animals = res.data;
+                    this.defaultType = res.data[this.$user.animalType-1].name;
+                })
+                this.defaultType = this.animals.filter( v => v.id == this.animalType);
+            },
+            methods: {
+                submitUserInfo: function() {
+                    axios({
+                        method: "post",
+                        url: "/editPetUser",
+                        params: {
+                            id: this.id,
+                            pw: this.pw,
+                            name: this.name,
+                            animalType: this.animalType,
+                            breed: this.breed,
+                            admin: this.admin,
+                            weight: this.weight
+                        }
+                    }).then(res => {
+                        alert("수정완료");
+                        sessionStorage.removeItem("user");
+                        sessionStorage.setItem("user", JSON.stringify(res.data));
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                },
+                deleteUser() {
+                    axios({
+                        method: "delete",
+                        url: "/deletePetUser",
+                        params: {
+                            id: this.id
+                        }
+                    }).then(res => {
+                        alert(res.data);
+                        window.location.href = "index.html";
+                    }).catch(err => {
+                        exceptionHandler(err);
+                    })
+                }
+            }
+
+
+        });
+
+    </script>
+
+</body>
+
+</html>
+
